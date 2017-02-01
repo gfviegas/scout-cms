@@ -1,26 +1,18 @@
-<template>
-  <section class="hero is-bold app-navbar animated" :class="{ slideInDown: show, slideOutDown: !show }">
-    <div class="hero-head">
-      <nav class="nav">
-        <div class="nav-left">
-          <a class="nav-item is-hidden-tablet" @click="toggleSidebar(!sidebar.opened)">
-            <i class="fa fa-bars" aria-hidden="true"></i>
-          </a>
-        </div>
-        <div class="nav-center">
-          <a class="nav-item hero-brand" href="/">
-            <img src="~assets/logo.svg" :alt="pkginfo.description">
-            <tooltip :label="'v' + pkginfo.version" placement="right" type="success" size="small" :no-animate="true" :always="true" :rounded="true">
-              <div class="is-hidden-mobile">
-                <span class="vue">Vue</span><strong class="admin">Admin</strong>
-              </div>
-            </tooltip>
-          </a>
-        </div>
-        <div class="nav-right is-flex"></div>
-      </nav>
-    </div>
-  </section>
+<template lang="pug">
+  section.hero.is-bold.app-navbar.animated(:class="{ slideInDown: show, slideOutDown: !show }")
+    div.hero-head
+      nav.nav
+        div.nav-left
+          a.nav-item.is-hidden-tablet(@click="toggleSidebar(!sidebar.opened)")
+            i.fa.fa-bars(aria-hidden="true")
+
+        div.nav-center
+          a.nav-item.hero-brand(href="/")
+            img(src="~assets/logo.svg")
+            div.is-hidden-mobile.is-flex
+              span.vue Scout
+              strong.admin CMS
+        div.nav-right.is-flex
 </template>
 
 <script>

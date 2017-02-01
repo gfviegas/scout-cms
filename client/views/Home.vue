@@ -1,18 +1,15 @@
-<template>
-  <div class="content has-text-centered">
-    <p>
-      <img width="200" src="~assets/logo.svg" :alt="description">
-    </p>
-
-    <h1 class="is-title is-bold">{{ name.replace('-', ' ') }}</h1>
-
-    <p>
-      <strong>{{ description }}</strong>,
-      <a :href="homepage">Live Demo</a>
-    </p>
-
-    <p>Supports Vue 2.0 and Bulma 0.2!</p>
-  </div>
+<template lang="pug">
+  div.content.has-text-centered
+    p
+      img(width="200" src="~assets/logo.svg")
+    h1.is-title.is-bold Scout CMS
+    p
+      strong Um gerenciador de conteúdo e blogging. Open Source.
+    p
+      | Desenvolvido pela Equipe Regional de Imagem e Comunicação dos Escoteiros do Brasil, Região de Minas Gerais.
+    p.
+      Feito a partir do
+      #[a(href="https://github.com/vue-bulma/vue-admin") Vue-Bulma Admin]
 </template>
 
 <script>

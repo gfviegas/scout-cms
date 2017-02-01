@@ -39,6 +39,7 @@
     "font-awesome": "4.7.0",
     "mdi": "1.7.22",
     "plotly.js": "1.21.2",
+    "pug": "^2.0.0-beta10",
     "vue": "2.1.10",
     "vue-bulma-brace": "0.0.1",
     "vue-bulma-breadcrumb": "github:vue-bulma/breadcrumb",

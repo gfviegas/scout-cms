@@ -1,52 +1,43 @@
-<template>
-  <footer class="footer">
-    <div class="container">
-      <div class="content has-text-centered">
-        <p class="social">
-          <a :href="'https://github.com/' + repository">
-            <span class="icon">
-              <i class="fa fa-github"></i>
-            </span>
-          </a>
-          <a href="https://twitter.com/_fundon">
-            <span class="icon">
-              <i class="fa fa-twitter"></i>
-            </span>
-          </a>
-        </p>
-        <p><span class="icon"><i class="fa fa-code"></i></span> with <span class="icon"><i class="fa fa-heart"></i></span> by <a href="https://github.com/fundon">fundon</a>.</p>
-        <p>Code licensed under <a :href="'https://github.com/' + repository + '/blob/master/LICENSE'">{{ license }}</a>.</p>
-      </div>
-    </div>
-  </footer>
+<template lang="pug">
+  footer.footer(:class="{ 'with-margin': authenticated }")
+    div.container
+      div.content.has-text-centered
+        p.social
+          a
+            span.icon
+              i.fa.fa-github
+          a
+            span.icon
+              i.fa.fa-twitter
+        p.
+          #[span.icon]
+            #[i.fa.fa-code]
+          por
+          #[a(href="www.gfviegas.com" target="_BLANK") Gustavo Viegas]
 </template>
 
 <script>
-export default {
-
-  data () {
-    return this.$store.state.pkg
+  import auth from '../../auth'
+  export default {
+    data () {
+      return this.$store.state.pkg
+    },
+    computed: {
+      authenticated: () => { return auth.user.authenticated }
+    }
   }
-
-}
 </script>
 
-<style lang="scss">
-@import '~bulma/sass/utilities/mixins';
+<style lang="sass">
+@import '~bulma/sass/utilities/mixins'
 
-.footer {
-  margin-left: 180px;
-  
-  @include mobile() {
-    margin-left: 0;
-  }
-  
-  .social a {
-    border-bottom: none !important;
-  }
-
-  .fa.fa-heart {
-    color: red;
-  }
-}
+.footer
+  &.with-margin
+    margin-left: 180px
+  @include mobile()
+    margin-left: 0
+  .social a
+    border-bottom: none !important
+  .fa.fa-heart
+    color: red
 </style>
