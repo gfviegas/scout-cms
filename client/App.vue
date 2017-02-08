@@ -1,8 +1,8 @@
 <template lang="pug">
   div#app
-    nprogress-container(:show="authenticated")
-    navbar(:show="authenticated")
-    sidebar(:show="authenticated && sidebar.opened && !sidebar.hidden")
+    nprogress-container
+    navbar(:show="$authenticated()")
+    sidebar(:show="$authenticated() && sidebar.opened && !sidebar.hidden")
     app-main
     footer-bar
 </template>
@@ -11,7 +11,6 @@
   import NprogressContainer from 'vue-nprogress/src/NprogressContainer'
   import { Navbar, Sidebar, AppMain, FooterBar } from 'components/layout/'
   import { mapGetters, mapActions } from 'vuex'
-  import auth from './auth'
 
   export default {
     components: {
@@ -42,10 +41,6 @@
     },
 
     computed: {
-      authenticated: () => {
-        console.log(auth.user.authenticated)
-        return auth.user.authenticated
-      },
       ...mapGetters({
         sidebar: 'sidebar'
       })

@@ -1,21 +1,17 @@
 <template lang="pug">
-  section(:class="{ 'app-main': authenticated }")
+  section(:class="{ 'app-main': $authenticated() }")
     div.container.is-fluid.is-marginless.app-content
-      levelbar(:show="authenticated")
+      levelbar(v-if="$authenticated()")
       transition(mode="out-in" enter-active-class="fadeIn" leave-active-class="fadeOut" appear)
         router-view.animated
 </template>
 
 <script>
   import Levelbar from './Levelbar'
-  import auth from '../../auth'
 
   export default {
     components: {
       Levelbar
-    },
-    computed: {
-      authenticated: () => { return auth.user.authenticated }
     }
   }
 </script>

@@ -24,12 +24,13 @@
     p.menu-label Usuário
       ul.menu-list
         li
-          a Desconectar
+          a(@click="logout()") Desconectar
 </template>
 
 <script>
   import Expanding from 'vue-bulma-expanding'
   import { mapGetters, mapActions } from 'vuex'
+  import auth from '../../auth'
 
   export default {
     components: {
@@ -102,6 +103,11 @@
             }
           }
         }
+      },
+      logout () {
+        auth.logout().then(() => {
+          window.location.reload()
+        })
       }
     },
     watch: {

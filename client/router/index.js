@@ -44,8 +44,6 @@ const appRouter = new Router({
 })
 
 appRouter.beforeEach((to, from, next) => {
-  console.log(to, from, auth.user.authenticated)
-
   // If not authenticated and trying to see anything but auth, deny it.
   if (to.name !== 'Auth' && !auth.user.authenticated) {
     next({ path: '/auth' })

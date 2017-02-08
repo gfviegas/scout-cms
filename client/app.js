@@ -7,9 +7,29 @@ import router from './router'
 import store from './store'
 import * as filters from './filters'
 import { TOGGLE_SIDEBAR } from 'vuex-store/mutation-types'
+import auth from './auth'
+
+auth.checkAuth()
 
 Vue.use(Resource)
 Vue.use(NProgress)
+
+Vue.prototype.$authenticated = () => {
+  return !!(auth.user.authenticated)
+}
+
+Vue.http.interceptors.push((request, next) => {
+  const token = auth.getToken()
+  if (token) {
+    request.headers['Authorization'] = 'Bearer ' + token
+  }
+
+  next((response) => {
+    if (response.status === 401) {
+      router.push({ name: 'Auth' })
+    }
+  })
+})
 
 // Enable devtools
 Vue.config.devtools = true
