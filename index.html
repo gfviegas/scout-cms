@@ -5,6 +5,16 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><%= htmlWebpackPlugin.options.title %></title>
+    <style>
+      .fade-enter-active, .fade-leave-active {
+        transition-property: opacity;
+        transition-duration: .5s;
+      }
+
+      .fade-enter, .fade-leave-active {
+        opacity: 0
+      }
+    </style>
   </head>
   <body>
     <div id="app"></div>
