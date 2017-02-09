@@ -2,19 +2,9 @@ import lazyLoading from './lazyLoading'
 
 export default {
   name: 'Usuários',
+  path: '/users',
   meta: {
-    icon: 'fa-users',
-    expanded: true
+    icon: 'fa-users'
   },
-
-  children: [
-    {
-      name: 'Users',
-      path: '/users',
-      meta: {
-        label: 'Administrar'
-      },
-      component: lazyLoading('users/Users')
-    }
-  ]
+  component: lazyLoading('users/Users')
 }

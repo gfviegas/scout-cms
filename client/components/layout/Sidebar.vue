@@ -2,6 +2,11 @@
   aside.menu.app-sidebar.animated(:class="{ slideInLeft: show, slideOutLeft: !show }")
     p.menu-label Páginas
     ul.menu-list
+      li
+        router-link(:to="{name: 'Home'}")(:exact="true")
+          span.icon.is-small
+            i.fa.fa-home
+          | Home
       li(v-for="(item, index) in menu")
         router-link(:to="item.path")(:exact="true")(:aria-expanded="isExpanded(item) ? 'true' : 'false'")(v-if="item.path")(@click.native="toggle(index, item)")
           span.icon.is-small
