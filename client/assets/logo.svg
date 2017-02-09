@@ -1,23 +1,14 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg width="200px" height="200px" viewBox="0 0 200 200" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 3.8.3 (29802) - http://www.bohemiancoding.com/sketch -->
-    <title>vue-admin</title>
-    <desc>Created with Sketch.</desc>
-    <defs>
-        <polyline id="path-1" points="2.83397663e-14 61.5862635 199.764279 -5.9908905e-15 172.590391 200 2.83397663e-14 61.5862635"></polyline>
-        <mask id="mask-2" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="199.764279" height="200" fill="white">
-            <use xlink:href="#path-1"></use>
-        </mask>
-        <polyline id="path-3" points="88.75 34.2145908 199.730155 1.47681231e-14 184.63355 111.111111 88.75 34.2145908"></polyline>
-        <mask id="mask-4" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="110.980155" height="111.111111" fill="white">
-            <use xlink:href="#path-3"></use>
-        </mask>
-    </defs>
-    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="Group">
-            <rect id="Rectangle-1" x="0" y="0" width="200" height="200"></rect>
-            <use id="Triangle-1" stroke="#40B883" mask="url(#mask-2)" stroke-width="40" xlink:href="#path-1"></use>
-            <use id="Triangle-1" stroke="#34495D" mask="url(#mask-4)" stroke-width="40" xlink:href="#path-3"></use>
-        </g>
-    </g>
+<svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
+ <!-- Created with Method Draw - http://github.com/duopixel/Method-Draw/ -->
+
+ <g>
+  <title>background</title>
+  <rect fill="none" id="canvas_background" height="202" width="202" y="-1" x="-1"/>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <path stroke="#000" transform="rotate(15 113.20605468750001,94.72937774658205) " id="svg_16" d="m99.008732,7.975559l26.758398,48.839525l-11.033576,5.763833l33.69393,41.844773l-11.028632,6.988239l41.652736,70.07127l-70.650475,-53.698078l13.475595,-7.457162l-43.897021,-34.394124l15.729766,-10.628897l-46.348926,-36.08094l51.648206,-31.248439z" fill-opacity="null" stroke-opacity="null" fill="#529D94"/>
+  <path stroke="#000" id="svg_14" d="m71.221594,9.981054l28.242952,52.495629l-11.645717,6.19531l35.563266,44.977252l-11.6405,7.511376l43.963626,75.316772l-74.570158,-57.717891l14.223219,-8.015401l-46.332424,-36.968851l16.602452,-11.424572l-48.920361,-38.781942l54.513644,-33.587682z" fill-opacity="null" stroke-opacity="null" fill="#529D94"/>
+  <path stroke="#000" id="svg_15" d="m81.023092,1.251938l25.398338,55.451144l-10.472768,6.544108l31.981355,47.509481l-10.468076,7.934268l39.535636,79.557122l-67.059496,-60.96742l12.790665,-8.46667l-41.66585,-39.050206l14.930263,-12.067778l-43.993131,-40.965374l49.023063,-35.478676z" stroke-opacity="null" fill="#7DD8B5"/>
+ </g>
 </svg>
