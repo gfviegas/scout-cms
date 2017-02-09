@@ -9,6 +9,13 @@ import * as filters from './filters'
 import { TOGGLE_SIDEBAR } from 'vuex-store/mutation-types'
 import auth from './auth'
 
+const moment = require('moment')
+require('moment/locale/pt-br')
+
+Vue.use(require('vue-moment'), {
+  moment
+})
+
 auth.checkAuth()
 
 Vue.use(Resource)

@@ -7,7 +7,7 @@
       table.table.is-narrow
         thead
           tr
-            th ID
+            //- th ID
             th Título
             th Último Editor
             th Atualizado
@@ -16,11 +16,11 @@
             th
         tbody
           tr(v-for="(newContent, index) in news")
-            td {{newContent._id}}
+            //- td {{newContent._id}}
             td {{newContent.title}}
             td {{newContent.last_updated_by.name}}
-            td {{newContent.updated_at}}
-            td {{newContent.created_at}}
+            td {{newContent.updated_at | moment("L LT")}}
+            td {{newContent.created_at | moment("L LT")}}
             td.is-icon
               a
                 i.fa.fa-pencil
@@ -57,6 +57,7 @@
     data () {
       return {
         news: [],
+        date: new Date(),
 
         showConfirmDeleteModal: false,
         confirmDeleteData: {}
@@ -77,11 +78,21 @@
       closeConfirmDeleteModal () {
         this.showConfirmDeleteModal = false
       },
-      deleteNews () {
-        openNotification({
-          message: 'Notícia excluída com sucesso!',
-          type: 'success',
-          duration: 3000
+      deleteNews (reference) {
+        newsService.delete(reference.id)
+        .then((response) => {
+          openNotification({
+            message: 'Notícia excluída com sucesso!',
+            type: 'success',
+            duration: 3000
+          })
+          this.news.splice(reference.index, 1)
+        }, (response) => {
+          openNotification({
+            message: 'Erro ao excluir a notícia!',
+            type: 'danger',
+            duration: 3000
+          })
         })
       }
     },
