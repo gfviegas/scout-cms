@@ -21,7 +21,7 @@ Vue.prototype.$authenticated = () => {
 Vue.http.interceptors.push((request, next) => {
   const token = auth.getToken()
   if (token) {
-    request.headers['Authorization'] = 'Bearer ' + token
+    request.headers.set('Authorization', 'Bearer ' + token)
   }
 
   next((response) => {

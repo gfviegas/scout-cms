@@ -32,8 +32,8 @@
 <script>
   import Vue from 'vue'
   import auth from '../auth'
-  import Notification from 'vue-bulma-notification'
   import router from '../router'
+  import Notification from 'vue-bulma-notification'
 
   const NotificationComponent = Vue.extend(Notification)
 
