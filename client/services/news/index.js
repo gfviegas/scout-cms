@@ -1,16 +1,22 @@
 import {app} from '../../app'
 
+const API_URL = process.env.API_URL
+
 export default {
-  get () {
-    return app.$http.get('api/news')
+  get (id) {
+    if (id) {
+      return app.$http.get(API_URL + `news/${id}`)
+    } else {
+      return app.$http.get(API_URL + 'news')
+    }
   },
   create (data) {
-    return app.$http.post('api/news', data)
+    return app.$http.post(API_URL + 'news', data)
   },
   delete (id) {
-    return app.$http.delete(`api/news/${id}`)
+    return app.$http.delete(API_URL + `news/${id}`)
   },
   update (id, data) {
-    return app.$http.patch(`api/news/${id}`, data)
+    return app.$http.patch(API_URL + `news/${id}`, data)
   }
 }

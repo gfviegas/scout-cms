@@ -13,7 +13,7 @@
           #[span.icon]
             #[i.fa.fa-code]
           por
-          #[a(href="www.gfviegas.com" target="_BLANK") Gustavo Viegas]
+          #[a(href="http://www.gfviegas.com" target="_BLANK") Gustavo Viegas]
 </template>
 
 <script>

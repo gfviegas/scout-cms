@@ -1,17 +1,4 @@
 <template lang="pug">
-  //- div.container
-  //-   div.columns
-  //-     div.column.is-7-desktop
-  //-       div.box
-  //-         form
-  //-           label.label Email
-  //-           p.control
-  //-             input.input(type="text" placeholder="seuemail@email.com")
-  //-           label.label Senha
-  //-           p.control
-  //-             input.input(type="password" placeholder="Digite sua senha")
-  //-           p.control.submit-button
-  //-             button.button.is-medium.is-primary Login
   section.hero.is-medium
     div.hero-body
       div.container
@@ -21,12 +8,14 @@
               form(v-on:submit.prevent="login()")
                 label.label Email
                 p.control
-                  input.input(type="text" placeholder="seuemail@email.com" v-model="credentials.email")
+                  input.input(type="text" placeholder="seuemail@email.com" v-model="credentials.email" v-validate="'required|email'" v-bind:class="{'is-danger': errors.has('email') }" name="email")
+                  span.help.is-danger(v-show="errors.has('email')") {{ errors.first('email') }}
                 label.label Senha
                 p.control
-                  input.input(type="password" placeholder="Digite sua senha" v-model="credentials.password")
+                  input.input(type="password" placeholder="Digite sua senha" v-model="credentials.password" v-validate="'required'" v-bind:class="{'is-danger': errors.has('password') }" name="password")
+                  span.help.is-danger(v-show="errors.has('password')") {{ errors.first('password') }}
                 p.control.submit-button
-                  button.button.is-medium.is-primary(type="submit") Login
+                  button.button.is-medium.is-primary(type="submit" v-bind:disabled="errors.any()") Login
 </template>
 
 <script>
@@ -63,27 +52,32 @@
     },
     methods: {
       login () {
-        const credentials = {
-          email: this.credentials.email,
-          password: this.credentials.password
-        }
+        this.$validator.validateAll().then(success => {
+          if (!success) return
 
-        auth.login(this, credentials)
-        .then((response) => {
-          auth.setToken(response.body.token)
-          .then(() => {
-            router.push({name: 'Home'})
+          const credentials = {
+            email: this.credentials.email,
+            password: this.credentials.password
+          }
+
+          auth.login(this, credentials)
+          .then((response) => {
+            auth.setToken(response.body.token)
+            .then(() => {
+              router.push({name: 'Home'})
+              window.location.reload()
+              openNotification({
+                message: 'Autenticado com sucesso!',
+                type: 'success',
+                duration: 3000
+              })
+            })
+          }, (response) => {
             openNotification({
-              message: 'Autenticado com sucesso!',
-              type: 'success',
+              message: 'Credenciais Inválidas!',
+              type: 'danger',
               duration: 3000
             })
-          })
-        }, (response) => {
-          openNotification({
-            message: 'Credenciais Inválidas!',
-            type: 'danger',
-            duration: 3000
           })
         })
       }

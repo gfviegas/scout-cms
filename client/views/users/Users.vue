@@ -39,18 +39,21 @@
             form(v-on:submit.prevent="createUser()" v-show="showCreateBox")
               label.label Nome
               p.control
-                input.input(type="text" placeholder="Joãozinho da Silva" v-model="newUser.name")
+                input.input(type="text" placeholder="Joãozinho da Silva" v-model="newUser.name" v-validate="'required|min:4|max:20'" v-bind:class="{'is-danger': errors.has('nome') }" name="nome")
+                span.help.is-danger(v-show="errors.has('nome')") {{ errors.first('nome') }}
               label.label Descrição
               p.control
                 input.input(type="text" placeholder="Criador de Conteúdo" v-model="newUser.description")
               label.label Email
               p.control
-                input.input(type="text" placeholder="seuemail@email.com" v-model="newUser.email")
+                input.input(type="text" placeholder="seuemail@email.com" v-model="newUser.email" v-validate="'required|email|unique_email'" v-bind:class="{'is-danger': errors.has('email') }" name="email")
+                span.help.is-danger(v-show="errors.has('email')") {{ errors.first('email') }}
               label.label Senha
               p.control
-                input.input(type="password" placeholder="Digite a senha do usuário" v-model="newUser.password")
+                input.input(type="password" placeholder="Digite a senha do usuário" v-model="newUser.password" v-validate="'required|min:6|max:20'" v-bind:class="{'is-danger': errors.has('senha') }" name="senha")
+                span.help.is-danger(v-show="errors.has('senha')") {{ errors.first('senha') }}
               p.control.submit-button
-                button.button.is-medium.is-primary(type="submit") Cadastrar
+                button.button.is-medium.is-primary(type="submit" v-bind:disabled="errors.any()") Cadastrar
 </template>
 <script>
   import Vue from 'vue'
@@ -151,26 +154,38 @@
         this.showCreateBox = !this.showCreateBox
       },
       createUser () {
-        userService.createUser(this.newUser)
-        .then((response) => {
-          openNotification({
-            message: 'Usuário criado com sucesso!',
-            type: 'success',
-            duration: 3000
+        this.$validator.validateAll().then(success => {
+          if (!success) return
+          userService.createUser(this.newUser)
+          .then((response) => {
+            openNotification({
+              message: 'Usuário criado com sucesso!',
+              type: 'success',
+              duration: 3000
+            })
+            this.users.push(response.body)
+
+            this.clearForm().then(() => {
+              this.errors.clear()
+            })
+          }, (response) => {
+            openNotification({
+              message: 'Erro ao criar o usuário!',
+              type: 'danger',
+              duration: 3000
+            })
           })
-          this.users.push(response.body)
+        })
+      },
+      clearForm () {
+        return new Promise((resolve, reject) => {
           this.newUser = {
             name: '',
             description: '',
             email: '',
             password: ''
           }
-        }, (response) => {
-          openNotification({
-            message: 'Erro ao criar o usuário!',
-            type: 'danger',
-            duration: 3000
-          })
+          resolve()
         })
       }
     },
@@ -185,7 +200,7 @@
     }
   }
 </script>
-<style lang="sass">
+<style lang="sass" scoped>
   .table-responsive
     display: block
     width: 100%

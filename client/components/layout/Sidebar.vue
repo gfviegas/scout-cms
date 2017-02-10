@@ -12,16 +12,16 @@
           span.icon.is-small
             i.fa(:class="item.meta.icon")
           | {{ item.meta.label || item.name }}
-          span.icon.is-small.is-angle(v-if="item.children && item.children.length")
+          span.icon.is-small.is-angle(v-if="item.showChildren && item.children && item.children.length")
             i.fa.fa-angle-down
         a(:aria-expanded="isExpanded(item)")(v-else)(@click="toggle(index, item)")
           span.icon.is-small
             i.fa(:class="item.meta.icon")
           | {{ item.meta.label || item.name }}
-          span.icon.is-small.is-angle(v-if="item.children && item.children.length")
+          span.icon.is-small.is-angle(v-if="item.showChildren && item.children && item.children.length")
             i.fa.fa-angle-down
 
-        expanding(v-if="item.children && item.children.length")
+        expanding(v-if="item.showChildren && item.children && item.children.length")
           ul(v-show="isExpanded(item)")
             li(v-for="subItem in item.children")(v-if="subItem.path")
               router-link(:to="generatePath(item, subItem)")
@@ -99,7 +99,7 @@
         const menu = this.menu
         for (let i = 0, l = menu.length; i < l; i++) {
           const item = menu[i]
-          const k = item.children && item.children.length
+          const k = item.showChildren && item.children && item.children.length
           if (k) {
             for (let j = 0; j < k; j++) {
               if (item.children[j].name === route.name) {
