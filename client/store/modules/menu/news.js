@@ -6,5 +6,23 @@ export default {
   meta: {
     icon: 'fa-newspaper-o'
   },
-  component: lazyLoading('news/News')
+  showChildren: false,
+  component: lazyLoading('news/News'),
+  children: [
+    {
+      name: 'Dashboard Notícias',
+      path: '',
+      component: lazyLoading('news/List')
+    },
+    {
+      name: 'Editar Notícia',
+      path: 'edit/:id',
+      component: lazyLoading('news/Editor')
+    },
+    {
+      name: 'Criar Notícia',
+      path: 'create',
+      component: lazyLoading('news/Editor')
+    }
+  ]
 }
