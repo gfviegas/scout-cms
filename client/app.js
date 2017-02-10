@@ -8,6 +8,9 @@ import store from './store'
 import * as filters from './filters'
 import { TOGGLE_SIDEBAR } from 'vuex-store/mutation-types'
 import auth from './auth'
+import userService from './services/user'
+import VeeValidate, { Validator } from 'vee-validate'
+import ValidatePT from 'vee-validate/dist/locale/pt_BR'
 
 const moment = require('moment')
 require('moment/locale/pt-br')
@@ -20,6 +23,25 @@ auth.checkAuth()
 
 Vue.use(Resource)
 Vue.use(NProgress)
+
+Vue.use(VeeValidate, {
+  locale: 'pt_BR',
+  dictionary: {
+    pt_BR: {
+      messages: ValidatePT
+    }
+  }
+})
+Validator.extend('unique_email', {
+  getMessage: (field) => `Este email já está vinculado a um usuário`,
+  validate: (value) => new Promise(resolve => {
+    console.log(this.errors)
+    userService.checkEmailExists(value)
+    .then(response => {
+      resolve({valid: !(response.body.exists)})
+    })
+  })
+})
 
 Vue.prototype.$authenticated = () => {
   return !!(auth.user.authenticated)
