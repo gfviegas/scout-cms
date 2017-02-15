@@ -1,6 +1,6 @@
 <template lang="pug">
-  image-modal(:visible="visible" @close="close" transition="roll" accept="image/*")
-    input#image-upload(type="file" @change="changeImage")
+  image-modal(:visible="visible" @close="close" transition="roll")
+    input#image-upload(type="file" @change="changeImage" accept="image/*")
     p.image.is-4by
       img(:src="imgUrl")
     div.change-button
