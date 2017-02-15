@@ -46,8 +46,9 @@
                 input.input(type="text" placeholder="Criador de Conteúdo" v-model="newUser.description")
               label.label Email
               p.control
-                input.input(type="text" placeholder="seuemail@email.com" v-model="newUser.email" v-validate="'required|email|unique_email'" v-bind:class="{'is-danger': errors.has('email') }" name="email")
+                input.input(type="text" placeholder="seuemail@email.com" v-model="newUser.email" v-on:keyup="clearEmailCustomErrors()" v-validate="'required|email'" v-bind:class="{'is-danger': errors.has('email') || customErrors.email.length }" name="email")
                 span.help.is-danger(v-show="errors.has('email')") {{ errors.first('email') }}
+                span.help.is-danger(v-show="customErrors.email.length") {{ customErrors.email[0] }}
               label.label Senha
               p.control
                 input.input(type="password" placeholder="Digite a senha do usuário" v-model="newUser.password" v-validate="'required|min:6|max:20'" v-bind:class="{'is-danger': errors.has('senha') }" name="senha")
@@ -91,6 +92,10 @@
         confirmDeleteData: {},
         showUpdateUserModal: false,
         updateUserData: {},
+
+        customErrors: {
+          email: []
+        },
 
         newUser: {
           name: '',
@@ -168,9 +173,16 @@
             this.clearForm().then(() => {
               this.errors.clear()
             })
-          }, (response) => {
+          }, response => {
+            let message = 'Erro ao criar o usuário!'
+
+            if (response.status === 409) {
+              message = 'Este email já está sendo utilizado!'
+              this.customErrors.email.push(message)
+            }
+
             openNotification({
-              message: 'Erro ao criar o usuário!',
+              message: message,
               type: 'danger',
               duration: 3000
             })
@@ -187,6 +199,11 @@
           }
           resolve()
         })
+      },
+      clearEmailCustomErrors () {
+        if (this.customErrors && this.customErrors.email.length) {
+          this.customErrors.email = []
+        }
       }
     },
     beforeRouteEnter (to, from, next) {
