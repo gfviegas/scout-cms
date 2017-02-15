@@ -3,6 +3,7 @@
     h3.title
       | Notícias
     div.table-responsive
+      image-modal(:visible="showImageModal" v-bind:data="imageModalData" @close="closeImageModal" v-on:error="imageUpdateNotification(false)" v-on:success="imageUpdateNotification(true)" v-on:confirm="imageUpdated")
       confirm-modal(:visible="showConfirmDeleteModal" @close="closeConfirmDeleteModal" v-bind:data="confirmDeleteData" v-on:confirm="deleteNews")
       table.table.is-narrow
         thead
@@ -13,6 +14,7 @@
             th Último Editor
             th Atualizado
             th Criado
+            th Imagem
             th
             th
         tbody
@@ -23,6 +25,9 @@
             td {{newContent.last_updated_by.name}}
             td {{newContent.updated_at | moment("L LT")}}
             td {{newContent.created_at | moment("L LT")}}
+            td.is-icon
+              a(@click="displayImageModal(newContent, index)")
+                i.fa.fa-image
             td.is-icon
               router-link(:to="{name: 'Editar Notícia', params: {id: newContent._id}}")
                 i.fa.fa-pencil
@@ -39,6 +44,7 @@
   import newsService from '../../services/news'
   import Notification from 'vue-bulma-notification'
   import ConfirmModal from '../../components/modals/Confirm'
+  import ImageModal from '../../components/modals/Image'
 
   const NotificationComponent = Vue.extend(Notification)
   const openNotification = (propsData = {
@@ -57,6 +63,7 @@
 
   export default {
     components: {
+      ImageModal,
       ConfirmModal
     },
     data () {
@@ -65,7 +72,9 @@
         date: new Date(),
 
         showConfirmDeleteModal: false,
-        confirmDeleteData: {}
+        confirmDeleteData: {},
+        showImageModal: false,
+        imageModalData: {}
       }
     },
     methods: {
@@ -82,6 +91,29 @@
       },
       closeConfirmDeleteModal () {
         this.showConfirmDeleteModal = false
+      },
+      displayImageModal (news, index) {
+        this.imageModalData = {
+          index: index,
+          id: news._id,
+          image: news.image
+        }
+        this.showImageModal = true
+      },
+      closeImageModal () {
+        this.showImageModal = false
+      },
+      imageUpdateNotification (success) {
+        const message = (success) ? 'Imagem atualizada com sucesso!' : 'Erro ao atualizar a imagem!'
+        const type = (success) ? 'success' : 'danger'
+        openNotification({
+          message: message,
+          type: type,
+          duration: 3000
+        })
+      },
+      imageUpdated (reference) {
+        this.news[reference.index].image = reference.image
       },
       deleteNews (reference) {
         newsService.delete(reference.id)
