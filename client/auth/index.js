@@ -1,5 +1,4 @@
-const LOGIN_URL = 'api/auth/'
-// const SIGNUP_URL = 'api/user/'
+const LOGIN_URL = `${process.env.API_URL}/api/auth/`
 
 export default {
   user: {
