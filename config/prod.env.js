@@ -2,6 +2,6 @@
 
 module.exports = {
   NODE_ENV: '"production"',
-  API_URL: '"http://localhost:3000/api/v1/"',
-  IMG_URL: '"http://localhost:3000/"'
+  API_URL: '"vps1765.publiccloud.com.br:3000/api/v1/"',
+  IMG_URL: '"vps1765.publiccloud.com.br:3000/"'
 }
