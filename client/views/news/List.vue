@@ -136,7 +136,7 @@
     beforeRouteEnter (to, from, next) {
       newsService.get().then((response) => {
         next(vm => {
-          vm.news = response.body
+          vm.news = response.body.news
         })
       }, (response) => {
         next(false)
