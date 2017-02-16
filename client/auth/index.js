@@ -1,4 +1,4 @@
-const LOGIN_URL = `${process.env.API_URL}/auth/`
+const LOGIN_URL = `${process.env.API_URL}auth/`
 
 export default {
   user: {
