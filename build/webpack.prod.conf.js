@@ -37,7 +37,7 @@ const webpackConfig = merge(baseWebpackConfig, {
     }),
     new webpack.optimize.UglifyJsPlugin({
       'screw-ie8': true,
-      sourceMap: true,
+      sourceMap: false,
       compress: {
         warnings: false
       },
