@@ -1,20 +1,21 @@
 <template lang="pug">
   image-modal(:visible="visible" @close="close" transition="roll")
-    input#image-upload(type="file" @change="changeImage" accept="image/*")
-    p.image.is-4by
+    div.container-img-modal
+      input#image-upload(type="file" @change="changeImage" accept="image/*")
       img(:src="imgUrl")
-    div.change-button
-      div.control.is-grouped.submit-group(v-if="hasImageInput")
-        button.button.is-success(@click="uploadImage()")
-          span.icon.is-small
-            i.fa.fa-check
-        button.button.is-danger(@click="cancelUpload()")
-          span.icon.is-small
-            i.fa.fa-times
-      div(v-else)
-        label.button.is-warning(for="image-upload")
-          span.icon.is-small
-            i.fa.fa-pencil
+      div.change-button
+        div.control.is-grouped.submit-group(v-if="hasImageInput")
+          button.button.is-success(@click="uploadImage()")
+            span.icon.is-small
+              i.fa.fa-check
+          button.button.is-danger(@click="cancelUpload()")
+            span.icon.is-small
+              i.fa.fa-times
+        div(v-else)
+          label.button.is-warning(for="image-upload")
+            | Editar 
+            span.icon.is-small
+              i.fa.fa-pencil
 </template>
 
 <script>
@@ -95,10 +96,19 @@
 </script>
 
 <style lang="sass" scoped>
-  #image-upload
-    visibility: hidden
-  .change-button
-    position: absolute
-    right: 0
-    top: 0
+  .container-img-modal
+    display: flex
+    width: 100%
+    flex-direction: row
+    justify-content: center
+    img
+      height: 480px
+      width: 480px
+    #image-upload
+      visibility: hidden
+      position: absolute
+    .change-button
+      position: absolute
+      right: 0
+      top: 0
 </style>
