@@ -43,6 +43,20 @@ export default {
     return window.localStorage.getItem('id_token')
   },
 
+  parseToken (token) {
+    var base64Url = token.split('.')[1]
+    var base64 = base64Url.replace('-', '+').replace('_', '/')
+    return JSON.parse(window.atob(base64))
+  },
+
+  checkPermission (permissions) {
+    let token = this.getToken()
+    if (!token) { return false }
+    let payload = this.parseToken(token).data
+    let perms = ['admin', ...permissions]
+    return perms.some(v => payload.roles.includes(v))
+  },
+
   // The object to be passed as a header for authenticated requests
   getAuthHeader () {
     return {

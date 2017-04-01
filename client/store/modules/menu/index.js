@@ -3,6 +3,7 @@ import * as types from '../../mutation-types'
 import users from './users'
 import news from './news'
 import rewards from './rewards'
+import badges from './badges'
 
 // show: meta.label -> name
 // name: component name
@@ -12,6 +13,7 @@ const state = {
   items: [
     news,
     rewards,
+    badges,
     users
   ]
 }

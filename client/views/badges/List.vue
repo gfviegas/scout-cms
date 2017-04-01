@@ -24,7 +24,7 @@
             td {{request.updated_at | moment("L LT")}}
             td {{request.created_at | moment("L LT")}}
             td.is-icon
-              router-link(:to="{name: 'Atualizar Solicitação de Recompensa', params: {id: request._id}}")
+              router-link(:to="{name: 'Atualizar Solicitação de Distintivo', params: {id: request._id}}")
                 i.fa.fa-pencil
             td.is-icon
               a(@click="openConfirmDeleteModal(request, index)")
@@ -122,7 +122,7 @@
       }
     },
     beforeRouteEnter (to, from, next) {
-      rewardsService.query({type: 'reward'}).then((response) => {
+      rewardsService.query({type: 'badge'}).then((response) => {
         next(vm => {
           vm.requests = response.body
         })

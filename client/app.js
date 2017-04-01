@@ -69,11 +69,19 @@ const nprogress = new NProgress({ parent: '.nprogress-container' })
 
 const { state } = store
 
-router.beforeEach((route, redirect, next) => {
+router.beforeEach((to, from, next) => {
   if (state.app.device.isMobile && state.app.sidebar.opened) {
     store.commit(TOGGLE_SIDEBAR, false)
   }
-  next()
+
+  if (to.meta && to.meta.requiredRoles) {
+    if (!auth.checkPermission(to.meta.requiredRoles)) {
+      console.log('Você não tem a permissão necessária pra ver essa página')
+      return next(false)
+    }
+  }
+
+  return next()
 })
 
 Object.keys(filters).forEach(key => {

@@ -1,31 +1,17 @@
 <template lang="pug">
   aside.menu.app-sidebar.animated(:class="{ slideInLeft: show, slideOutLeft: !show }")
     p.menu-label Páginas
-    ul.menu-list
+    ul.menu-list(v-if="menu")
       li
-        router-link(:to="{name: 'Home'}")(:exact="true")
+        router-link(:to="{name: 'Home'}" v-bind:exact="true")
           span.icon.is-small
             i.fa.fa-home
           | Home
-      li(v-for="(item, index) in menu")
-        router-link(:to="item.path")(:exact="true")(:aria-expanded="isExpanded(item) ? 'true' : 'false'")(v-if="item.path")(@click.native="toggle(index, item)")
+      li(v-for="route in menu")
+        router-link(:to="{name: getLinkName(route)}" v-bind:exact="true" v-show="hasPermission(route)")
           span.icon.is-small
-            i.fa(:class="item.meta.icon")
-          | {{ item.meta.label || item.name }}
-          span.icon.is-small.is-angle(v-if="item.showChildren && item.children && item.children.length")
-            i.fa.fa-angle-down
-        a(:aria-expanded="isExpanded(item)")(v-else)(@click="toggle(index, item)")
-          span.icon.is-small
-            i.fa(:class="item.meta.icon")
-          | {{ item.meta.label || item.name }}
-          span.icon.is-small.is-angle(v-if="item.showChildren && item.children && item.children.length")
-            i.fa.fa-angle-down
-
-        expanding(v-if="item.showChildren && item.children && item.children.length")
-          ul(v-show="isExpanded(item)")
-            li(v-for="subItem in item.children")(v-if="subItem.path")
-              router-link(:to="generatePath(item, subItem)")
-                | {{ subItem.meta && subItem.meta.label || subItem.name }}
+            i.fa(v-bind:class="route.meta.icon")
+          | {{route.meta.label || route.name}}
     p.menu-label Usuário
       ul.menu-list
         li
@@ -60,6 +46,23 @@
       menu: 'menuitems'
     }),
     methods: {
+      getLinkName (route) {
+        if (route.meta.link) {
+          return route.meta.link.name
+        }
+        return route.name
+      },
+      hasPermission (route) {
+        let handledRoute = route
+        if (route.meta.link) {
+          handledRoute = route.meta.link
+        }
+        if (!handledRoute.meta || !handledRoute.meta.requiredRoles) {
+          return true
+        }
+
+        return auth.checkPermission(handledRoute.meta.requiredRoles)
+      },
       ...mapActions([
         'expandMenu'
       ]),
@@ -99,7 +102,7 @@
         const menu = this.menu
         for (let i = 0, l = menu.length; i < l; i++) {
           const item = menu[i]
-          const k = item.showChildren && item.children && item.children.length
+          const k = item.showChildren && item.children && item.children.showInMenu
           if (k) {
             for (let j = 0; j < k; j++) {
               if (item.children[j].name === route.name) {

@@ -41,9 +41,22 @@
               p.control
                 input.input(type="text" placeholder="Joãozinho da Silva" v-model="newUser.name" v-validate="'required|min:4|max:20'" v-bind:class="{'is-danger': errors.has('nome') }" name="nome")
                 span.help.is-danger(v-show="errors.has('nome')") {{ errors.first('nome') }}
+              label.label Funções
+              p.control
+                multiselect(
+                  v-model="newUser.roles",
+                  :options="options",
+                  :multiple="true",
+                  :taggable="true",
+                  @tag="addTag",
+                  placeholder="Escolha uma ou mais funções",
+                  tag-placeholder="Pressione enter pra escolher"
+                  label="name",
+                  track-by="name"
+                )
               label.label Descrição
               p.control
-                input.input(type="text" placeholder="Criador de Conteúdo" v-model="newUser.description")
+                input.input(type="text" placeholder="Ex: Coordenador de Imagem" v-model="newUser.description")
               label.label Email
               p.control
                 input.input(type="text" placeholder="seuemail@email.com" v-model="newUser.email" v-on:keyup="clearEmailCustomErrors()" v-validate="'required|email'" v-bind:class="{'is-danger': errors.has('email') || customErrors.email.length }" name="email")
@@ -62,6 +75,7 @@
   import Notification from 'vue-bulma-notification'
   import ConfirmModal from '../../components/modals/Confirm'
   import UpdateUserModal from './modals/Update'
+  import Multiselect from 'vue-multiselect'
 
   const NotificationComponent = Vue.extend(Notification)
   const openNotification = (propsData = {
@@ -81,12 +95,19 @@
   export default {
     components: {
       ConfirmModal,
-      UpdateUserModal
+      UpdateUserModal,
+      Multiselect
     },
     data () {
       return {
         users: null,
         showCreateBox: false,
+        options: [
+          {name: 'Administrador', value: 'admin'},
+          {name: 'Condecorações e Recompensas', value: 'badges'},
+          {name: 'Distintivos Especiais', value: 'rewards'},
+          {name: 'Criador de Conteúdo', value: 'content'}
+        ],
 
         showConfirmDeleteModal: false,
         confirmDeleteData: {},
@@ -99,6 +120,7 @@
 
         newUser: {
           name: '',
+          roles: [],
           description: '',
           email: '',
           password: ''
@@ -159,9 +181,12 @@
         this.showCreateBox = !this.showCreateBox
       },
       createUser () {
+        let formValue = Object.assign({}, this.newUser)
+        formValue.roles = this.newUser.roles.map((role) => role.value)
+        formValue.roles.push('user')
         this.$validator.validateAll().then(success => {
           if (!success) return
-          userService.createUser(this.newUser)
+          userService.createUser(formValue)
           .then((response) => {
             openNotification({
               message: 'Usuário criado com sucesso!',
@@ -188,6 +213,14 @@
             })
           })
         })
+      },
+      addTag (newTag) {
+        const tag = {
+          name: newTag,
+          code: newTag.substring(0, 2) + Math.floor((Math.random() * 10000000))
+        }
+        this.taggingOptions.push(tag)
+        this.taggingSelected.push(tag)
       },
       clearForm () {
         return new Promise((resolve, reject) => {
@@ -218,6 +251,7 @@
   }
 </script>
 <style lang="sass" scoped>
+  @import '~vue-multiselect/dist/vue-multiselect.min.css'
   .table-responsive
     display: block
     width: 100%

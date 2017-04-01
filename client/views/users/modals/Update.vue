@@ -7,6 +7,19 @@
         p.control
           input.input(type="text" placeholder="Joãozinho da Silva" v-model="data.user.name" v-validate="'required|min:4|max:20'" v-bind:class="{'is-danger': errors.has('nome') }" name="nome")
           span.help.is-danger(v-show="errors.has('nome')") {{ errors.first('nome') }}
+        label.label Funções
+        p.control
+          multiselect(
+            v-model="data.user.roles",
+            :options="options",
+            :multiple="true",
+            :taggable="true",
+            @tag="addTag",
+            placeholder="Escolha uma ou mais funções",
+            tag-placeholder="Pressione enter pra escolher"
+            label="name",
+            track-by="name"
+          )
         label.label Descrição
         p.control
           input.input(type="text" placeholder="Criador de Conteúdo" v-model="data.user.description")
@@ -25,33 +38,67 @@
 <script>
   import { Modal } from 'vue-bulma-modal'
   import userService from '../../../services/user'
+  import Multiselect from 'vue-multiselect'
+
+  let _this
 
   export default {
     components: {
-      Modal
+      Modal,
+      Multiselect
     },
-
+    mounted () {
+      _this = this
+    },
     props: {
       visible: Boolean,
       data: Object
+    },
+    watch: {
+      visible: (value) => {
+        if (value) {
+          _this.data.user.roles = _this.data.user.roles.map((role) => {
+            return _this.options.find((option) => option.value === role)
+          })
+          _this.data.user.roles = _this.data.user.roles.filter((role) => {
+            return role !== undefined
+          })
+        }
+      }
     },
     data () {
       return {
         customErrors: {
           email: []
-        }
+        },
+        options: [
+          {name: 'Administrador', value: 'admin'},
+          {name: 'Condecorações e Recompensas', value: 'badges'},
+          {name: 'Distintivos Especiais', value: 'rewards'},
+          {name: 'Criador de Conteúdo', value: 'content'}
+        ]
       }
     },
     methods: {
+      addTag (newTag) {
+        const tag = {
+          name: newTag,
+          code: newTag.substring(0, 2) + Math.floor((Math.random() * 10000000))
+        }
+        this.taggingOptions.push(tag)
+        this.taggingSelected.push(tag)
+      },
       close () {
         this.$emit('close', false)
       },
       updateUser () {
-        const formattedData = {
+        let formattedData = {
           name: this.data.user.name,
           email: this.data.user.email,
-          description: this.data.user.description
+          description: this.data.user.description,
+          roles: this.data.user.roles.map((role) => role.value)
         }
+        formattedData.roles.push('user')
         userService.updateUser(this.data.user._id, formattedData)
         .then((response) => {
           const reference = {

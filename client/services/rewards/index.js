@@ -10,7 +10,13 @@ export default {
       return app.$http.get(API_URL + 'rewards')
     }
   },
+  query (params) {
+    return app.$http.get(API_URL + 'rewards', {params: params})
+  },
   update (id, data) {
     return app.$http.patch(API_URL + `rewards/${id}`, data)
+  },
+  delete (id) {
+    return app.$http.delete(API_URL + `rewards/${id}`)
   }
 }
