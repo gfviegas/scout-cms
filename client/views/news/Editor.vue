@@ -47,14 +47,16 @@
     [{'header': [1, 2, 3, 4, 5, 6, false]}],
     [{'color': []}],
     [{'align': []}],
+    ['link'],
     ['clean']
   ]
   const editorConfig = {
     theme: 'snow',
+    bounds: document.body,
     modules: {
       toolbar: toolbarOptions
     },
-    formats: ['bold', 'italic', 'underline', 'strike', 'color', 'size', 'header', 'align']
+    formats: ['bold', 'italic', 'underline', 'strike', 'color', 'size', 'header', 'align', 'link']
   }
 
   export default {
@@ -164,4 +166,7 @@
   .submit-button
     padding-top: 2rem
     text-align: center
+  .ql-snow .ql-out-bottom
+    visibility: visible
+
 </style>
