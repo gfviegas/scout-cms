@@ -132,6 +132,8 @@
             return 'Distintivo Especial'
           case 'reward':
             return 'Condecoração'
+          case 'sower':
+            return 'Distintivo de Semeador'
         }
       },
       getStatusMessage (request) {
@@ -163,7 +165,7 @@
             type: 'success',
             duration: 3000
           })
-          this.$router.push({name: 'Dashboard Distintivos Especiais'})
+          this.$router.push({name: 'Dashboard Distintivo Semeador'})
         }, response => {
           let message = 'Erro ao atualizar a solicitação!'
 

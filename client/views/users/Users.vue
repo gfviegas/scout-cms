@@ -106,6 +106,7 @@
           {name: 'Administrador', value: 'admin'},
           {name: 'Condecorações e Recompensas', value: 'rewards'},
           {name: 'Distintivos Especiais', value: 'badges'},
+          {name: 'Distintivo de Semeador', value: 'sower'},
           {name: 'Criador de Conteúdo', value: 'content'}
         ],
 

@@ -3,6 +3,7 @@ import * as types from '../../mutation-types'
 import users from './users'
 import news from './news'
 import rewards from './rewards'
+import sower from './sower'
 import badges from './badges'
 
 // show: meta.label -> name
@@ -14,6 +15,7 @@ const state = {
     news,
     rewards,
     badges,
+    sower,
     users
   ]
 }
