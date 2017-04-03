@@ -20,10 +20,13 @@
         span {{request.resume}}
 
       br
-      h5.subtitle.is-5 Dados do(a) Solicitador(a)
+      h5.subtitle.is-5 Dados do(a) Solicitante
       label.label Registro
       p.control
         span {{request.author.register}}
+      label.label Nome
+      p.control
+        span {{request.author.name}}
       label.label Email
       p.control
         span {{request.author.email}}

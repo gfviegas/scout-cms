@@ -104,8 +104,8 @@
         showCreateBox: false,
         options: [
           {name: 'Administrador', value: 'admin'},
-          {name: 'Condecorações e Recompensas', value: 'badges'},
-          {name: 'Distintivos Especiais', value: 'rewards'},
+          {name: 'Condecorações e Recompensas', value: 'rewards'},
+          {name: 'Distintivos Especiais', value: 'badges'},
           {name: 'Criador de Conteúdo', value: 'content'}
         ],
 

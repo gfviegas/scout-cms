@@ -10,6 +10,7 @@
             th ID
             th Tipo
             th Recompensa
+            th Agraciado(a)
             th Status
             th Atualizado
             th Criado
@@ -20,6 +21,7 @@
             td {{request._id}}
             td {{typeFormated(request)}}
             td {{request.reward}}
+            td {{request.gifted.name}}
             td {{statusFormated(request)}}
             td {{request.updated_at | moment("L LT")}}
             td {{request.created_at | moment("L LT")}}
