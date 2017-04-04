@@ -1,13 +1,6 @@
-sudo: false
 language: node_js
 node_js:
-  - "5"
-  - "6"
-
-before_install:
-  - npm install npm@latest -g
-
+  - "stable"
+  - "7"
 script:
-  - node --version
-  - npm --version
   - npm run build
