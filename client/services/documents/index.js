@@ -16,6 +16,9 @@ export default {
   update (id, data) {
     return app.$http.patch(API_URL + `documents/${id}`, data)
   },
+  replace (id, data) {
+    return app.$http.put(API_URL + `documents/${id}`, data)
+  },
   delete (id) {
     return app.$http.delete(API_URL + `documents/${id}`)
   }

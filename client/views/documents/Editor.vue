@@ -1,81 +1,38 @@
 <template lang="pug">
   div.box
     h3.title
-      | Atualizar Solicitação
-    form(v-on:submit.prevent="submitForm()" v-if="request && request._id")
+      | {{text}} Documento
+    form(v-on:submit.prevent="submitForm()" novalidate)
       br
-      h5.subtitle.is-5 Conferir Dados
-
-      label.label Id
-      p.control
-        span {{request._id}}
       label.label Tipo
       p.control
-        span {{typeFormated(request)}}
-      label.label Recompensa
-      p.control
-        span {{request.reward}}
-      label.label Justificativa
-      p.control
-        span {{request.resume}}
-
-      br
-      h5.subtitle.is-5 Dados do(a) Solicitante
-      label.label Registro
-      p.control
-        span {{request.author.register}}
-      label.label Nome
-      p.control
-        span {{request.author.name}}
-      label.label Email
-      p.control
-        span {{request.author.email}}
-      label.label Telefone
-      p.control
-        span {{request.author.phone}}
-      label.label Celular
-      p.control
-        span {{request.author.cellphone}}
-      label.label Função no Escotismo
-      p.control
-        span {{request.author.role}}
-      label.label Grupo Escoteiro
-      p.control
-        span {{request.author.group.number}} - {{request.author.group.name}}
-
-      br
-      h5.subtitle.is-5 Dados do(a) Agraciado(a)
-      label.label Registro
-      p.control
-        span {{request.gifted.register}}
-      label.label Nome
-      p.control
-        span {{request.gifted.name}}
-      label.label Grupo Escoteiro
-      p.control
-        span {{request.gifted.group.number}} - {{request.gifted.group.name}}
-
-      br
-      h5.subtitle.is-5 Atualizar Status
-      label.label Status
-      p.control
-        select(name="status" v-model="request.status" v-validate="'required'" data-vv-as="Status da Solicitação" v-bind:class="{'is-danger': errors.has('status')}")
+        select(name="type" v-model="document.type" v-validate="'required'" data-vv-as="Tipo do Documento" v-bind:class="{'is-danger': errors.has('type')}")
           option(default value="") Selecione...
-          option(value="waiting") Aguardando
-          option(value="analyzing") Analisando
-          option(value="rejected") Rejeitado
-          option(value="approved") Aprovado
-          option(value="issued") Emitido
-        span.help.is-danger(v-if="errors.has('status')") {{ errors.first('status') }}
-        small.help.is-info(v-else) O status escolhido significa que: #[strong {{getStatusMessage(request)}}]
+          option(value="book") Apostila
+          option(value="notice") Edital
+          option(value="ordinance") Portaria
+          option(value="other") Outro
+        span.help.is-danger(v-if="errors.has('type')") {{ errors.first('type') }}
+        small.help.is-info(v-else) Descrição do tipo: #[strong {{getTypeDescription(document)}}]
+      label.label Título
+      p.control
+        input(type="text" name="title" v-model="document.title" v-validate="'required'" data-vv-as="Título do Documento" v-bind:class="{'is-danger': errors.has('title')}")
+        span.help.is-danger(v-if="errors.has('title')") {{ errors.first('title') }}
+      label.label Descrição
+      p.control
+        input(type="text" name="description" v-model="document.description")
+      label.label Arquivo
+      p.control
+        input(type="file" name="file" @change="fileChanged" v-validate="'required'" data-vv-as="Arquivo do Documento" v-bind:class="{'is-danger': errors.has('file')}")
+          span.help.is-danger(v-if="errors.has('file')") {{ errors.first('file') }}
 
       p.control.submit-button
-        button.button.is-medium.is-primary(type="submit" v-bind:disabled="errors.any()") Atualizar
+        button.button.is-medium.is-primary(type="submit" v-bind:disabled="errors.any()") Salvar
 </template>
 
 <script>
   import Vue from 'vue'
-  import rewardsService from '../../services/rewards'
+  import documentsService from '../../services/documents'
   import Notification from 'vue-bulma-notification'
   // import router from '../../router'
 
@@ -96,67 +53,94 @@
 
   export default {
     beforeRouteEnter (to, from, next) {
-      rewardsService.get(to.params.id).then((response) => {
-        next(vm => {
-          vm.request = response.body
+      if (to.name === 'Atualizar Documento') {
+        documentsService.get(to.params.id).then((response) => {
+          next(vm => {
+            vm.type = 'edit'
+            vm.text = 'Editar'
+            vm.document = response.body
+          })
+        }, (response) => {
+          next(false)
         })
-      }, (response) => {
-        next(false)
-      })
+      } else {
+        next(vm => {
+          vm.type = 'create'
+          vm.text = 'Cadastrar'
+        })
+      }
     },
     data () {
       return {
-        request: {}
+        document: {},
+        validations: {},
+        type: 'create'
+        text: 'Cadastrar'
       }
     },
     methods: {
-      statusFormated (request) {
-        if (!request || !request.status) return false
-        switch (request.status) {
-          case 'waiting':
-            return 'Aguardando'
-          case 'analyzing':
-            return 'Analisando'
-          case 'issued':
-            return 'Emitido'
-          case 'rejected':
-            return 'Indeferido'
-          case 'approved':
-            return 'Deferido'
-        }
-      },
       typeFormated (request) {
         if (!request || !request.status) return false
         switch (request.type) {
-          case 'badge':
-            return 'Distintivo Especial'
-          case 'reward':
-            return 'Condecoração'
+          case 'book':
+            return 'Apostila'
+          case 'notice':
+            return 'Edital'
+          case 'ordinance':
+            return 'Portaria'
+          case 'other':
+            return 'Outro'
         }
       },
-      getStatusMessage (request) {
-        if (!request || !request.status) return false
-        switch (request.status) {
-          case 'waiting':
-            return 'A solicitação foi recebida e está aguardando análise.'
-          case 'analyzing':
-            return 'A Região Escoteira está analisando a sua solicitação.'
-          case 'issued':
-            return 'A solicitação foi aprovada e a sua recompensa já foi emitida.'
-          case 'rejected':
-            return 'A solicitação foi negada.'
-          case 'approved':
-            return 'A solicitação foi aprovada e aguarda emissão.'
+      getTypeDescription (document) {
+        if (!document || !document.type) return false
+        switch (document.type) {
+          case 'book':
+            return 'Apostila de Cursos, conteúdo educativo e afins.'
+          case 'notice':
+            return 'Edital de atividades, eventos e etc.'
+          case 'ordinance':
+            return 'Portarias oficiais emitidas pela RMG.'
+          case 'other':
+            return 'Outros tipos de documentos, incomuns, não categorizados.'
+        }
+      },
+      fileChanged (e) {
+        const files = e.srcElement.files || e.dataTransfer.files
+        if (files[0]) {
+          this.document.file = files[0]
         }
       },
       submitForm () {
         this.$validator.validateAll().then(success => {
           if (!success) return
-          this.editRequest()
+          if (this.type === 'edit') {
+            this.edit()
+          } else {
+            this.create()
+          }
         })
       },
-      editRequest () {
-        rewardsService.update(this.request._id, {status: this.request.status})
+      create () {
+        const formData = new window.FormData()
+        formData.append('file', this.document.file, this.document.file.name)
+        formData.append('title', this.document.title)
+        formData.append('description', this.document.description)
+        formData.append('type', this.document.type)
+        documentsService.create(formData)
+        .then(response => {
+
+        }, response => {
+
+        })
+      },
+      edit () {
+        const formData = new window.FormData()
+        formData.append('file', this.document.file, this.document.file.name)
+        formData.append('title', this.document.title)
+        formData.append('description', this.document.description)
+        formData.append('type', this.document.type)
+        documentsService.replace(this.document._id, formData)
         .then(response => {
           openNotification({
             message: 'Solicitação atualizada com sucesso!',
