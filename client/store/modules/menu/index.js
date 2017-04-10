@@ -5,6 +5,7 @@ import news from './news'
 import rewards from './rewards'
 import sower from './sower'
 import badges from './badges'
+import documents from './documents'
 
 // show: meta.label -> name
 // name: component name
@@ -13,6 +14,7 @@ import badges from './badges'
 const state = {
   items: [
     news,
+    documents,
     rewards,
     badges,
     sower,
