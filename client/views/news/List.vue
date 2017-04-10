@@ -20,11 +20,16 @@
         tbody
           tr(v-for="(newContent, index) in news")
             //- td {{newContent._id}}
-            td {{newContent.slug}}
-            td {{newContent.title}}
-            td {{newContent.last_updated_by.name}}
-            td {{newContent.updated_at | moment("L LT")}}
-            td {{newContent.created_at | moment("L LT")}}
+            td
+              span(v-if="newContent.slug") {{newContent.slug}}
+            td
+              span(v-if="newContent.title") {{newContent.title}}
+            td
+              span(v-if="newContent.last_updated_by") {{newContent.last_updated_by.name}}
+            td
+              span(v-if="newContent.updated_at") {{newContent.updated_at | moment("L LT")}}
+            td
+              span(v-if="newContent.created_at") {{newContent.created_at | moment("L LT")}}
             td.is-icon
               a(@click="displayImageModal(newContent, index)")
                 i.fa.fa-image
