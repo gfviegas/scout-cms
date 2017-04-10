@@ -10,7 +10,7 @@ const children = [
   {
     name: 'Criar Documento',
     path: 'create',
-    component: lazyLoading('news/Editor'),
+    component: lazyLoading('documents/Editor'),
     meta: {requiredRoles: ['content']}
   },
   {

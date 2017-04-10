@@ -13,6 +13,9 @@ export default {
   query (params) {
     return app.$http.get(API_URL + 'documents', {params: params})
   },
+  create (data) {
+    return app.$http.post(API_URL + 'documents', data)
+  },
   update (id, data) {
     return app.$http.patch(API_URL + `documents/${id}`, data)
   },
