@@ -56,6 +56,15 @@
         span {{request.gifted.group.number}} - {{request.gifted.group.name}}
 
       br
+      h5.subtitle.is-5 Parecer da Solicitação
+      small.help Coloque aqui uma mensagem de resposta ao solicitante
+      br
+      p.control
+        label.label Parecer
+        textarea.textarea(v-model="request.reply" v-validate="'min:10|max:500'" v-bind:class="{'is-danger': errors.has('reply') }" name="reply")
+        span.help.is-danger(v-show="errors.has('reply')") {{ errors.first('reply') }}
+
+      br
       h5.subtitle.is-5 Atualizar Status
       label.label Status
       p.control
@@ -156,7 +165,7 @@
         })
       },
       editRequest () {
-        rewardsService.update(this.request._id, {status: this.request.status})
+        rewardsService.update(this.request._id, {status: this.request.status, reply: this.request.reply})
         .then(response => {
           openNotification({
             message: 'Solicitação atualizada com sucesso!',
