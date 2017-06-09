@@ -2,6 +2,12 @@
   div.box
     h3.title
       | Notícias
+    form.search-container(v-on:submit.prevent="applySearch()")
+      p.control.has-addons
+        input.input(type="search" placeholder="Pesquisar" v-model="filter")
+        button.button.is-primary(type="submit")
+          span.icon
+            i.fa.fa-search
     div.table-responsive
       image-modal(:visible="showImageModal" v-bind:data="imageModalData" @close="closeImageModal" v-on:error="imageUpdateNotification(false)" v-on:success="imageUpdateNotification(true)" v-on:confirm="imageUpdated")
       confirm-modal(:visible="showConfirmDeleteModal" @close="closeConfirmDeleteModal" v-bind:data="confirmDeleteData" v-on:confirm="deleteNews")
@@ -39,6 +45,8 @@
             td.is-icon
               a(@click="openConfirmDeleteModal(newContent, index)")
                 i.fa.fa-trash
+    div.pagination-container
+      pagination(modifiers="is-centered" v-bind:currentPage="currentPage" v-bind:lastPage="totalPages" v-bind:routeName="routeName")
     p.add-button
       router-link(:to="{name: 'Criar Notícia'}")
         button.button.is-medium-.is-primary Adicionar Notícia
@@ -50,6 +58,9 @@
   import Notification from 'vue-bulma-notification'
   import ConfirmModal from '../../components/modals/Confirm'
   import ImageModal from '../../components/modals/Image'
+  import Pagination from '../../components/pagination/Pagination'
+
+  const ITEMS_PER_PAGE = 15
 
   const NotificationComponent = Vue.extend(Notification)
   const openNotification = (propsData = {
@@ -69,10 +80,16 @@
   export default {
     components: {
       ImageModal,
-      ConfirmModal
+      ConfirmModal,
+      Pagination
     },
     data () {
       return {
+        filter: '',
+        currentPage: 1,
+        limit: 4,
+        totalPages: 1,
+        routeName: this.$route.name,
         news: [],
         date: new Date(),
 
@@ -136,21 +153,53 @@
             duration: 3000
           })
         })
+      },
+      applySearch () {
+        this.page = 1
+        newsService.query({page: this.page, limit: ITEMS_PER_PAGE, filter: this.filter}).then((response) => {
+          this.news = response.body.news
+          this.currentPage = response.body.meta.currentPage
+          this.limit = response.body.meta.limit
+          this.totalPages = response.body.meta.totalPages
+        })
       }
     },
-    beforeRouteEnter (to, from, next) {
-      newsService.get().then((response) => {
-        next(vm => {
-          vm.news = response.body.news
-        })
-      }, (response) => {
-        next(false)
+    created () {
+      const vm = this
+      const page = this.$route.query.page || 1
+      const filter = this.$route.query.filter || ''
+
+      newsService.query({page: page, limit: ITEMS_PER_PAGE, filter: filter}).then((response) => {
+        vm.news = response.body.news
+        vm.currentPage = response.body.meta.currentPage
+        vm.limit = response.body.meta.limit
+        vm.totalPages = response.body.meta.totalPages
+        vm.filter = filter
       })
+    },
+    watch: {
+      '$route' (to, from) {
+        const page = to.query.page
+        newsService.query({page: page, limit: ITEMS_PER_PAGE, filter: this.filter}).then((response) => {
+          this.news = response.body.news
+          this.currentPage = response.body.meta.currentPage
+          this.limit = response.body.meta.limit
+          this.totalPages = response.body.meta.totalPages
+        })
+      }
     }
   }
 </script>
 
 <style lang="sass" scoped>
+  .search-container
+    padding: 1rem 0
+    display: flex
+    justify-content: center
+    .control
+      width: 50%
+      input
+        width: 100%
   .table-responsive
     display: block
     width: 100%

@@ -2,6 +2,12 @@
   div.box
     h3.title
       | Documentos
+    form.search-container(v-on:submit.prevent="applySearch()")
+      p.control.has-addons
+        input.input(type="search" placeholder="Pesquisar" v-model="filter")
+        button.button.is-primary(type="submit")
+          span.icon
+            i.fa.fa-search
     div.table-responsive
       confirm-modal(:visible="showConfirmDeleteModal" @close="closeConfirmDeleteModal" v-bind:data="confirmDeleteData" v-on:confirm="deleteRequest")
       table.table.is-narrow
@@ -35,6 +41,8 @@
             td.is-icon
               a(@click="openConfirmDeleteModal(document, index)")
                 i.fa.fa-trash
+    div.pagination-container
+      pagination(modifiers="is-centered" v-bind:currentPage="currentPage" v-bind:lastPage="totalPages" v-bind:routeName="routeName")
     p.add-button
       router-link(:to="{name: 'Criar Documento'}")
         button.button.is-medium-.is-primary Criar Documento
@@ -45,6 +53,9 @@
   import Notification from 'vue-bulma-notification'
   import ConfirmModal from '../../components/modals/Confirm'
   import documentsService from '../../services/documents'
+  import Pagination from '../../components/pagination/Pagination'
+
+  const ITEMS_PER_PAGE = 15
 
   const NotificationComponent = Vue.extend(Notification)
   const openNotification = (propsData = {
@@ -63,10 +74,16 @@
 
   export default {
     components: {
-      ConfirmModal
+      ConfirmModal,
+      Pagination
     },
     data () {
       return {
+        filter: '',
+        currentPage: 1,
+        limit: 4,
+        totalPages: 1,
+        routeName: this.$route.name,
         showConfirmDeleteModal: false,
         confirmDeleteData: {},
         documents: [],
@@ -107,21 +124,53 @@
       },
       typeFormated (document) {
         return documentsService.typeFormated(document)
+      },
+      applySearch () {
+        this.page = 1
+        documentsService.query({page: this.page, limit: ITEMS_PER_PAGE, filter: this.filter}).then((response) => {
+          this.documents = response.body.documents
+          this.currentPage = response.body.meta.currentPage
+          this.limit = response.body.meta.limit
+          this.totalPages = response.body.meta.totalPages
+        })
       }
     },
-    beforeRouteEnter (to, from, next) {
-      documentsService.get().then((response) => {
-        next(vm => {
-          vm.documents = response.body
-        })
-      }, (response) => {
-        next(false)
+    created () {
+      const vm = this
+      const page = this.$route.query.page || 1
+      const filter = this.$route.query.filter || ''
+
+      documentsService.query({page: page, limit: ITEMS_PER_PAGE, filter: filter}).then((response) => {
+        vm.documents = response.body.documents
+        vm.currentPage = response.body.meta.currentPage
+        vm.limit = response.body.meta.limit
+        vm.totalPages = response.body.meta.totalPages
+        vm.filter = filter
       })
+    },
+    watch: {
+      '$route' (to, from) {
+        const page = to.query.page
+        documentsService.query({page: page, limit: ITEMS_PER_PAGE, filter: this.filter}).then((response) => {
+          this.documents = response.body.documents
+          this.currentPage = response.body.meta.currentPage
+          this.limit = response.body.meta.limit
+          this.totalPages = response.body.meta.totalPages
+        })
+      }
     }
   }
 </script>
 
 <style lang="sass" scoped>
+  .search-container
+    padding: 1rem 0
+    display: flex
+    justify-content: center
+    .control
+      width: 50%
+      input
+        width: 100%
   .table-responsive
     display: block
     width: 100%
