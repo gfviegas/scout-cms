@@ -9,7 +9,10 @@
         select.select(name="type" v-model="document.type" v-validate="'required'" data-vv-as="Tipo do Documento" v-bind:class="{'is-danger': errors.has('type')}")
           option(default value="") Selecione...
           option(value="book") Apostila
+          option(value="resolution") Resolução
           option(value="ordinance") Portaria
+          option(value="balance") Balanço Financeiro
+          option(value="minute") Ata
           option(value="other") Outro
         small.help.is-info(v-if="!errors.has('type') && document.type") Descrição do tipo: #[strong {{getTypeDescription(document)}}]
         span.help.is-danger(v-else) {{ errors.first('type') }}
@@ -84,30 +87,10 @@
     },
     methods: {
       typeFormated (document) {
-        if (!document || !document.type) return false
-        switch (document.type) {
-          case 'book':
-            return 'Apostila'
-          case 'notice':
-            return 'Edital'
-          case 'ordinance':
-            return 'Portaria'
-          case 'other':
-            return 'Outro'
-        }
+        return documentsService.typeFormated(document)
       },
       getTypeDescription (document) {
-        if (!document || !document.type) return false
-        switch (document.type) {
-          case 'book':
-            return 'Apostila de Cursos, conteúdo educativo e afins.'
-          case 'notice':
-            return 'Edital de atividades, eventos e etc.'
-          case 'ordinance':
-            return 'Portarias oficiais emitidas pela RMG.'
-          case 'other':
-            return 'Outros tipos de documentos, incomuns, não categorizados.'
-        }
+        return documentsService.typeDescription(document)
       },
       submitForm () {
         this.$validator.validateAll().then(success => {

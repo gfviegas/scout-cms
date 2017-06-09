@@ -24,5 +24,43 @@ export default {
   },
   delete (id) {
     return app.$http.delete(API_URL + `documents/${id}`)
+  },
+  typeFormated (doc) {
+    if (!doc || !doc.type) return false
+    switch (doc.type) {
+      case 'book':
+        return 'Apostila'
+      case 'notice':
+        return 'Edital'
+      case 'resolution':
+        return 'Resolução'
+      case 'ordinance':
+        return 'Portaria'
+      case 'balance':
+        return 'Balanço Financeiro'
+      case 'minute':
+        return 'Ata'
+      case 'other':
+        return 'Outro'
+    }
+  },
+  typeDescription (doc) {
+    if (!doc || !doc.type) return false
+    switch (doc.type) {
+      case 'book':
+        return 'Apostila de Cursos, conteúdo educativo e afins.'
+      case 'notice':
+        return 'Edital de atividades, eventos e etc.'
+      case 'resolution':
+        return 'Resoluções oficiais emitidas pela RMG.'
+      case 'ordinance':
+        return 'Portarias oficiais emitidas pela RMG.'
+      case 'balance':
+        return 'Balanços financeiros oficiais emitidos pela RMG.'
+      case 'minute':
+        return 'Atas de assembleias e reuniões relevantes da RMG.'
+      case 'other':
+        return 'Outros tipos de documentos, incomuns, não categorizados.'
+    }
   }
 }

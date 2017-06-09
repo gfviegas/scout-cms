@@ -106,17 +106,7 @@
         })
       },
       typeFormated (document) {
-        if (!document || !document.type) return false
-        switch (document.type) {
-          case 'book':
-            return 'Apostila'
-          case 'notice':
-            return 'Edital'
-          case 'ordinance':
-            return 'Portaria'
-          case 'other':
-            return 'Outro'
-        }
+        return documentsService.typeFormated(document)
       }
     },
     beforeRouteEnter (to, from, next) {

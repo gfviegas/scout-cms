@@ -17,5 +17,16 @@ export default {
   },
   checkEmailExists (email) {
     return app.$http.post(API_URL + 'users/email', {email: email})
+  },
+  getRoles () {
+    return [
+      {name: 'Administrador', value: 'admin'},
+      {name: 'Condecorações e Recompensas', value: 'rewards'},
+      {name: 'Distintivos Especiais', value: 'badges'},
+      {name: 'Distintivo de Semeador', value: 'sower'},
+      {name: 'Solicitação de Nível', value: 'level'},
+      {name: 'Solicitação de Caderno/Projeto', value: 'book'},
+      {name: 'Criador de Conteúdo', value: 'content'}
+    ]
   }
 }
