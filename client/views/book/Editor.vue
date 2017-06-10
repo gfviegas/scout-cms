@@ -2,7 +2,7 @@
   div.box
     h3.title
       | Atualizar Solicitação
-    form(v-on:submit.prevent="submitForm()" v-if="request && request._id")
+    form(v-on:submit.prevent="submitForm()")
       br
       h5.subtitle.is-5 Conferir Dados
 
@@ -12,15 +12,12 @@
       label.label Tipo
       p.control
         span {{typeFormated(request)}}
-      label.label Recompensa
+      label.label Documento Enviado
       p.control
-        span {{request.reward}}
-      label.label Justificativa
-      p.control
-        span {{request.resume}}
+        a(v-bind:href="fileUrl" target="BLANK") Ver Documento
 
       br
-      h5.subtitle.is-5 Dados do(a) Solicitante
+      h5.subtitle.is-5 Dados do(a) Assessor Pessoal
       label.label Registro
       p.control
         span {{request.author.register}}
@@ -36,12 +33,15 @@
       label.label Celular
       p.control
         span {{request.author.cellphone}}
-      label.label Função no Escotismo
-      p.control
-        span {{request.author.role}}
       label.label Grupo Escoteiro
       p.control
         span {{request.author.group.number}} - {{request.author.group.name}}
+      label.label Linhas de Formação
+      p.control
+        span {{request.author.formation.lines}}
+      label.label Níveis de Formação
+      p.control
+        span {{request.author.formation.levels}}
 
       br
       h5.subtitle.is-5 Dados do(a) Agraciado(a)
@@ -51,6 +51,9 @@
       label.label Nome
       p.control
         span {{request.gifted.name}}
+      label.label Email
+      p.control
+        span {{request.gifted.email}}
       label.label Grupo Escoteiro
       p.control
         span {{request.gifted.group.number}} - {{request.gifted.group.name}}
@@ -107,7 +110,9 @@
     beforeRouteEnter (to, from, next) {
       rewardsService.get(to.params.id).then((response) => {
         next(vm => {
-          vm.request = response.body
+          vm.request = Object.assign(vm.request, response.body)
+          vm.fileUrl = `${process.env.IMG_URL}${vm.request.file}`
+          console.log(vm.request)
         })
       }, (response) => {
         next(false)
@@ -115,7 +120,16 @@
     },
     data () {
       return {
-        request: {}
+        fileUrl: '#',
+        request: {
+          author: {
+            group: {},
+            formation: {}
+          },
+          gifted: {
+            group: {}
+          }
+        }
       }
     },
     methods: {
@@ -142,7 +156,7 @@
             type: 'success',
             duration: 3000
           })
-          this.$router.push({name: 'Dashboard Recompensas'})
+          this.$router.push({name: 'Dashboard Cadernos / Projetos'})
         }, response => {
           let message = 'Erro ao atualizar a solicitação!'
 

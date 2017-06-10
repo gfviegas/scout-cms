@@ -120,45 +120,13 @@
     },
     methods: {
       statusFormated (request) {
-        if (!request || !request.status) return false
-        switch (request.status) {
-          case 'waiting':
-            return 'Aguardando'
-          case 'analyzing':
-            return 'Analisando'
-          case 'issued':
-            return 'Emitido'
-          case 'rejected':
-            return 'Indeferido'
-          case 'approved':
-            return 'Deferido'
-        }
+        return rewardsService.statusFormated(request)
       },
       typeFormated (request) {
-        if (!request || !request.status) return false
-        switch (request.type) {
-          case 'badge':
-            return 'Distintivo Especial'
-          case 'reward':
-            return 'Condecoração'
-          case 'sower':
-            return 'Distintivo de Semeador'
-        }
+        return rewardsService.typeFormated(request)
       },
       getStatusMessage (request) {
-        if (!request || !request.status) return false
-        switch (request.status) {
-          case 'waiting':
-            return 'A solicitação foi recebida e está aguardando análise.'
-          case 'analyzing':
-            return 'A Região Escoteira está analisando a sua solicitação.'
-          case 'issued':
-            return 'A solicitação foi aprovada e a sua recompensa já foi emitida.'
-          case 'rejected':
-            return 'A solicitação foi negada.'
-          case 'approved':
-            return 'A solicitação foi aprovada e aguarda emissão.'
-        }
+        return rewardsService.getStatusMessage(request)
       },
       submitForm () {
         this.$validator.validateAll().then(success => {

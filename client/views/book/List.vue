@@ -1,7 +1,7 @@
 <template lang="pug">
   div.box
     h3.title
-      | Solicitações de Recompensas
+      | Solicitações de Cadernos/Projetos
     form.search-container(v-on:submit.prevent="applySearch()")
       p.control.has-addons
         input.input(type="search" placeholder="Pesquisar" v-model="filter")
@@ -15,7 +15,7 @@
           tr
             th ID
             th Tipo
-            th Recompensa
+            th Arquivo
             th Agraciado(a)
             th Status
             th Atualizado
@@ -26,13 +26,14 @@
           tr(v-for="(request, index) in requests")
             td {{request._id}}
             td {{typeFormated(request)}}
-            td {{request.reward}}
+            td
+              a(v-bind:href="fileUrl(request)" target="BLANK") Link
             td {{request.gifted.name}}
             td {{statusFormated(request)}}
             td {{request.updated_at | moment("L LT")}}
             td {{request.created_at | moment("L LT")}}
             td.is-icon
-              router-link(:to="{name: 'Atualizar Solicitação de Recompensa', params: {id: request._id}}")
+              router-link(:to="{name: 'Atualizar Solicitação de Caderno / Projeto', params: {id: request._id}}")
                 i.fa.fa-pencil
             td.is-icon
               a(@click="openConfirmDeleteModal(request, index)")
@@ -49,7 +50,7 @@
   import Pagination from '../../components/pagination/Pagination'
 
   const ITEMS_PER_PAGE = 15
-  const PAGE_TYPE = 'reward'
+  const PAGE_TYPE = 'book'
 
   const NotificationComponent = Vue.extend(Notification)
   const openNotification = (propsData = {
@@ -92,7 +93,7 @@
             index: index
           },
           title: 'Confirmar Operação',
-          content: `Você tem certeza que deseja excluir a solicitação "${request.reward} para ${request.gifted.name}" ? Essa operação não pode ser cancelada.`
+          content: `Você tem certeza que deseja excluir a solicitação para ${request.gifted.name} ? Essa operação não pode ser cancelada.`
         }
         this.showConfirmDeleteModal = true
       },
@@ -130,6 +131,9 @@
           this.limit = response.body.meta.limit
           this.totalPages = response.body.meta.totalPages
         })
+      },
+      fileUrl (request) {
+        return `${process.env.IMG_URL}${request.file}`
       }
     },
     created () {
@@ -168,8 +172,6 @@
       width: 50%
       input
         width: 100%
-  .pagination-container
-    padding: 2rem
   .table-responsive
     display: block
     width: 100%

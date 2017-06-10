@@ -1,7 +1,7 @@
 <template lang="pug">
   div.box
     h3.title
-      | Solicitações de Recompensas
+      | Solicitações de Nível
     form.search-container(v-on:submit.prevent="applySearch()")
       p.control.has-addons
         input.input(type="search" placeholder="Pesquisar" v-model="filter")
@@ -15,7 +15,7 @@
           tr
             th ID
             th Tipo
-            th Recompensa
+            th Nível Sol.
             th Agraciado(a)
             th Status
             th Atualizado
@@ -32,7 +32,7 @@
             td {{request.updated_at | moment("L LT")}}
             td {{request.created_at | moment("L LT")}}
             td.is-icon
-              router-link(:to="{name: 'Atualizar Solicitação de Recompensa', params: {id: request._id}}")
+              router-link(:to="{name: 'Atualizar Solicitação de Nível', params: {id: request._id}}")
                 i.fa.fa-pencil
             td.is-icon
               a(@click="openConfirmDeleteModal(request, index)")
@@ -49,7 +49,7 @@
   import Pagination from '../../components/pagination/Pagination'
 
   const ITEMS_PER_PAGE = 15
-  const PAGE_TYPE = 'reward'
+  const PAGE_TYPE = 'level'
 
   const NotificationComponent = Vue.extend(Notification)
   const openNotification = (propsData = {
@@ -168,8 +168,6 @@
       width: 50%
       input
         width: 100%
-  .pagination-container
-    padding: 2rem
   .table-responsive
     display: block
     width: 100%

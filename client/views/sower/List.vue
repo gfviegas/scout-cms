@@ -117,30 +117,10 @@
         })
       },
       statusFormated (request) {
-        if (!request || !request.status) return false
-        switch (request.status) {
-          case 'waiting':
-            return 'Aguardando'
-          case 'analyzing':
-            return 'Analisando'
-          case 'issued':
-            return 'Emitido'
-          case 'rejected':
-            return 'Indeferido'
-          case 'approved':
-            return 'Deferido'
-        }
+        return rewardsService.statusFormated(request)
       },
       typeFormated (request) {
-        if (!request || !request.type) return false
-        switch (request.type) {
-          case 'badge':
-            return 'Distintivo Especial'
-          case 'reward':
-            return 'Condecoração'
-          case 'sower':
-            return 'Distintivo de Semeador'
-        }
+        return rewardsService.typeFormated(request)
       },
       applySearch () {
         this.page = 1

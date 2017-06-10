@@ -4,6 +4,8 @@ import users from './users'
 import news from './news'
 import rewards from './rewards'
 import sower from './sower'
+import level from './level'
+import book from './book'
 import badges from './badges'
 import documents from './documents'
 
@@ -18,6 +20,8 @@ const state = {
     rewards,
     badges,
     sower,
+    level,
+    book,
     users
   ]
 }
