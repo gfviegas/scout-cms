@@ -3,6 +3,11 @@
     h3.title
       | {{text}} Notícia
     form(v-on:submit.prevent="submitForm()")
+      p.control.cache-control
+        a.button.is-primary(@click="rescrape()" v-show="news && news._id")
+          | Atualizar Cache
+          span.icon
+            i.fa.fa-refresh
       label.label Título
       p.control
         input.input(type="text" placeholder="Título da Notícia" v-model="news.title" v-validate="'required|min:4|max:100'" v-bind:class="{'is-danger': errors.has('title') }" name="title")
@@ -156,6 +161,24 @@
         if (this.customErrors && this.customErrors.slug.length) {
           this.customErrors.slug = []
         }
+      },
+      rescrape () {
+        newsService.rescrape(this.news._id)
+        .then(response => {
+          console.log(response)
+          openNotification({
+            message: 'Cache da notícia atualizado com sucesso!',
+            type: 'success',
+            duration: 3000
+          })
+        }, response => {
+          console.log(response)
+          openNotification({
+            message: 'Erro ao atualizar o cache da notícia!',
+            type: 'danger',
+            duration: 3000
+          })
+        })
       }
     }
   }
@@ -168,5 +191,8 @@
     text-align: center
   .ql-snow .ql-out-bottom
     visibility: visible
+  .cache-control
+    display: flex
+    justify-content: flex-end
 
 </style>

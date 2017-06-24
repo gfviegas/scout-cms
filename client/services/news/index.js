@@ -21,5 +21,8 @@ export default {
   },
   update (id, data) {
     return app.$http.patch(API_URL + `news/${id}`, data)
+  },
+  rescrape (id, data) {
+    return app.$http.patch(API_URL + `news/${id}/rescrape`, data)
   }
 }
