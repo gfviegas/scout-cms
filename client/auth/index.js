@@ -1,4 +1,7 @@
+import Vue from 'vue'
+
 const LOGIN_URL = `${process.env.API_URL}auth/`
+const RESET_URL = `${process.env.API_URL}auth/reset`
 
 export default {
   user: {
@@ -10,6 +13,18 @@ export default {
   },
 
   signup (context, creds) {
+  },
+
+  resetPassword (context, credentials) {
+    return context.$http.post(RESET_URL, credentials)
+  },
+
+  findByToken (token) {
+    return Vue.http.get(`${LOGIN_URL}passwordtoken/${token}`)
+  },
+
+  updatePassword (token, password) {
+    return Vue.http.patch(`${LOGIN_URL}${token}/password`, {password: password})
   },
 
   logout () {

@@ -16,12 +16,14 @@
                   span.help.is-danger(v-show="errors.has('password')") {{ errors.first('password') }}
                 p.control.submit-button
                   button.button.is-medium.is-primary(type="submit" v-bind:disabled="errors.any()") Login
+                p.control.submit-button
+                  router-link(:to="{name: 'Reset Password'}") Esqueci minha senha
 </template>
 
 <script>
   import Vue from 'vue'
-  import auth from '../auth'
-  import router from '../router'
+  import auth from '../../auth'
+  import router from '../../router'
   import Notification from 'vue-bulma-notification'
 
   const NotificationComponent = Vue.extend(Notification)

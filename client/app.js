@@ -24,14 +24,11 @@ auth.checkAuth()
 Vue.use(Resource)
 Vue.use(NProgress)
 
+Validator.addLocale(ValidatePT)
 Vue.use(VeeValidate, {
-  locale: 'pt_BR',
-  dictionary: {
-    pt_BR: {
-      messages: ValidatePT
-    }
-  }
+  locale: 'pt_BR'
 })
+
 Validator.extend('unique_email', {
   getMessage: (field) => `Este email já está vinculado a um usuário`,
   validate: (value) => new Promise(resolve => {

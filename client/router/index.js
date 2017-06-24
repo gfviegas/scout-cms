@@ -28,7 +28,17 @@ const appRouter = new Router({
     {
       name: 'Auth',
       path: '/auth',
-      component: require('../views/Auth')
+      component: require('../views/auth/Auth')
+    },
+    {
+      name: 'Reset Password',
+      path: '/auth/reset',
+      component: require('../views/auth/Reset')
+    },
+    {
+      name: 'Update Password',
+      path: '/auth/update/:token',
+      component: require('../views/auth/Update')
     },
     {
       name: 'Home',
@@ -43,12 +53,15 @@ const appRouter = new Router({
   ]
 })
 
+const authRoutes = ['Auth', 'Reset Password', 'Update Password']
+
 appRouter.beforeEach((to, from, next) => {
   // If not authenticated and trying to see anything but auth, deny it.
-  if (to.name !== 'Auth' && !auth.user.authenticated) {
+  if ((authRoutes.indexOf(to.name) < 0) && !auth.user.authenticated) {
     next({ path: '/auth' })
+
   // And if authenticated, don't show the auth page
-  } else if (to.name === 'Auth' && auth.user.authenticated) {
+  } else if ((authRoutes.indexOf(to.name) >= 0) && auth.user.authenticated) {
     next({ path: '/' })
   } else {
     next()
