@@ -25,6 +25,7 @@ Vue.use(Resource)
 Vue.use(NProgress)
 
 Validator.addLocale(ValidatePT)
+Validator.installDateTimeValidators(moment)
 Vue.use(VeeValidate, {
   locale: 'pt_BR'
 })
