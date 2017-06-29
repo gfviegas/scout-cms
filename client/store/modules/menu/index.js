@@ -2,6 +2,7 @@ import * as types from '../../mutation-types'
 // import lazyLoading from './lazyLoading'
 import users from './users'
 import news from './news'
+import events from './events'
 import rewards from './rewards'
 import sower from './sower'
 import level from './level'
@@ -16,6 +17,7 @@ import documents from './documents'
 const state = {
   items: [
     news,
+    events,
     documents,
     rewards,
     badges,

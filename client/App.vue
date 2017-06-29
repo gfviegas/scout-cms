@@ -62,6 +62,7 @@
   @import '~wysiwyg.css/wysiwyg.sass'
   $fa-font-path: '~font-awesome/fonts/'
   @import '~font-awesome/scss/font-awesome'
+  @import '~vue-multiselect/dist/vue-multiselect.min.css'
 
   .nprogress-container
     position: fixed !important
