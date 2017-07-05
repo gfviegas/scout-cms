@@ -23,17 +23,17 @@
         span.help.is-danger(v-show="errors.has('place')") {{ errors.first('place') }}
       label.label Data de Início*
       p.control
-        cleave.input(v-bind:options="{date: true, datePattern: ['d', 'm', 'Y'] }" placeholder="DD/MM/AAAA" v-model="event.start_date" v-validate="'required|date_format:{DD/MM/YYYY}'" v-bind:class="{'is-danger': errors.has('start_date') }" name="start_date" data-vv-as="Data de Início")
+        cleave.input(v-bind:options="{date: true, datePattern: ['d', 'm', 'Y'] }" placeholder="DD/MM/AAAA" v-model="event.start_date" v-validate="'required|date_format:DD/MM/YYYY'" v-bind:class="{'is-danger': errors.has('start_date') }" data-vv-name="start_date" data-vv-as="Data de Início")
         span.help.is-danger(v-show="errors.has('start_date')") {{ errors.first('start_date') }}
-      //- label.label Data de Encerramento
-      //- p.control
-      //-   cleave.input(v-bind:options="{date: true, datePattern: ['d', 'm', 'Y'] }" placeholder="DD/MM/AAAA" v-model="event.end_date" v-validate="'date_format:{DD/MM/YYYY}'" v-bind:class="{'is-danger': errors.has('end_date') }" name="end_date" data-vv-as="Data de Encerramento")
-      //-   span.help.is-danger(v-show="errors.has('end_date')") {{ errors.first('end_date') }}
-      label.label Seções Participantes
+      label.label Data de Encerramento
+      p.control
+        cleave.input(v-bind:options="{date: true, datePattern: ['d', 'm', 'Y'] }" placeholder="DD/MM/AAAA" v-model="event.end_date" v-validate="'date_format:DD/MM/YYYY'" v-bind:class="{'is-danger': errors.has('end_date') }"  data-vv-name="end_date" data-vv-as="Data de Encerramento")
+        span.help.is-danger(v-show="errors.has('end_date')") {{ errors.first('end_date') }}
+      label.label Seções Participantes*
       p.control
         multiselect(
           v-model="event.section",
-          :options="options",
+          :options="sections",
           :multiple="true",
           :taggable="true",
           @tag="addTag",
@@ -42,9 +42,61 @@
           select-label="Aperte enter para selecionar"
           deselect-label="Aperte enter para remover"
           tag-placeholder="Pressione enter pra escolher",
+          v-validate="'required'",
+          v-bind:class="{'is-danger': errors.has('section') }",
+          data-vv-name="section",
+          data-vv-as="Seções Participantes"
         )
-        span.help.is-danger(v-show="errors.has('end_date')") {{ errors.first('end_date') }}
-      label.label Conteúdo*
+        span.help.is-danger(v-show="errors.has('section')") {{ errors.first('section') }}
+      label.label Tipo*
+      p.control
+        multiselect(
+          v-model="event.host",
+          :options="hosts",
+          :multiple="true",
+          :taggable="true",
+          @tag="addTag",
+          placeholder="Escolha...",
+          selected-label="Selecionado"
+          select-label="Aperte enter para selecionar"
+          deselect-label="Aperte enter para remover"
+          tag-placeholder="Pressione enter pra escolher",
+          v-validate="'required'",
+          v-bind:class="{'is-danger': errors.has('host') }",
+          data-vv-name="host",
+          data-vv-as="Tipo"
+        )
+        span.help.is-danger(v-show="errors.has('host')") {{ errors.first('host') }}
+      hr
+      h5.title.is-5 Arquivos
+      div.box(v-for="(file, index) in event.files")
+        div.file-box
+          span.subtitle.is-6 Arquivo # {{index+1}}
+          a.file-delete-link(@click="removeFile(index)")
+            span.icon
+              i.fa.fa-trash
+        label.label Título
+        p.control
+          input.input(type="text" placeholder="Título do Arquivo" v-model="file.title" v-validate="'required|min:4|max:100'" v-bind:class="{'is-danger': errors.has('title#' + index) }" v-bind:name="'title#' + index" data-vv-as="Título")
+          span.help.is-danger(v-show="errors.has('title#' + index)") {{ errors.first('title#' + index) }}
+        label.label URL Arquivo
+        p.control
+          input.input(type="text" placeholder="Link para o Arquivo" v-model="file.path" v-validate="'required|min:4|max:100'" v-bind:class="{'is-danger': errors.has('file#' + index) }" v-bind:name="'file#' + index" data-vv-as="URL")
+          span.help.is-danger(v-show="errors.has('file#' + index)") {{ errors.first('file#' + index) }}
+        br
+      p.control.submit-button
+        a.button.is-info(@click="addFile()") Adicionar Arquivo
+      hr
+      h5.title.is-5 Imagem
+      div.box.image-box
+        p.image-input
+          input#image-upload(type="file" @change="changeImage" accept="image/*")
+          label.button.is-info(for="image-upload") Alterar Imagem
+        div.image-container
+          figure.image.is-square
+            img(:src="getEventImage()")
+      hr
+      label.label Descrição*
       quill-editor(:config="editorConfig" ref="eventEditor" v-model="event.description")
       p.control.submit-button
         button.button.is-medium.is-primary(type="submit" v-bind:disabled="errors.any()") {{text}} Evento
@@ -117,8 +169,10 @@
     },
     data () {
       return {
-        options: eventsService.getSections(),
+        sections: eventsService.getSections(),
+        hosts: eventsService.getHosts(),
         text: '',
+        imagePath: `${process.env.IMG_URL}/events/no_image.jpg`,
         event: {
           title: '',
           slug: '',
@@ -129,7 +183,7 @@
           start_date: '',
           end_date: '',
           section: [],
-          files: []
+          files: [{path: '', title: ''}]
         },
         customErrors: {
           slug: []
@@ -209,6 +263,26 @@
         this.taggingOptions.push(tag)
         this.taggingSelected.push(tag)
       },
+      addFile () {
+        this.event.files.push({path: '', title: ''})
+      },
+      removeFile (index) {
+        this.event.files.splice(index, 1)
+      },
+      getEventImage () {
+        if (this.event.image.length) {
+          return `${process.env.IMG_URL}${this.event.image}`
+        } else {
+          return this.imagePath
+        }
+      },
+      changeImage (e) {
+        const files = e.srcElement.files || e.dataTransfer.files
+        if (files) {
+          this.imagePath = window.URL.createObjectURL(files[0])
+          this.event.image = files[0]
+        }
+      },
       rescrape () {
         eventsService.rescrape(this.event._id)
         .then(response => {
@@ -241,5 +315,23 @@
   .cache-control
     display: flex
     justify-content: flex-end
-
+  .file-box
+    padding-bottom: 1rem
+    .file-delete-link
+      float: right
+  .image-box
+    display: flex
+    flex-direction: column
+    .image-input
+      align-self: center
+      padding-bottom: 1.5rem
+      #image-upload
+        visibility: hidden
+        position: absolute
+    .image-container
+      width: 480px
+      display: flex
+      align-self: center
+      figure, image
+        width: 480px
 </style>

@@ -33,5 +33,14 @@ export default {
       'Ramo Pioneiro',
       'Adultos'
     ]
+  },
+  getHosts () {
+    return [
+      'Regional',
+      'Distrital',
+      'Nacional',
+      'Internacional',
+      'Outro'
+    ]
   }
 }
