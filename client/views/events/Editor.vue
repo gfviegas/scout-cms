@@ -23,11 +23,11 @@
         span.help.is-danger(v-show="errors.has('place')") {{ errors.first('place') }}
       label.label Data de Início*
       p.control
-        cleave.input(v-bind:options="{date: true, datePattern: ['d', 'm', 'Y'] }" placeholder="DD/MM/AAAA" v-model="event.start_date" v-validate="'required|date_format:DD/MM/YYYY'" v-bind:class="{'is-danger': errors.has('start_date') }" data-vv-name="start_date" data-vv-as="Data de Início")
+        cleave.input(v-bind:options="{date: true, datePattern: ['d', 'm', 'Y'] }" placeholder="DD/MM/AAAA" v-model="event.start_date" v-validate="`required|date_format:DD/MM/YYYY|date_between:${today},${lastDay}`" v-bind:class="{'is-danger': errors.has('start_date') }" data-vv-name="start_date" data-vv-as="Data de Início")
         span.help.is-danger(v-show="errors.has('start_date')") {{ errors.first('start_date') }}
       label.label Data de Encerramento
       p.control
-        cleave.input(v-bind:options="{date: true, datePattern: ['d', 'm', 'Y'] }" placeholder="DD/MM/AAAA" v-model="event.end_date" v-validate="'date_format:DD/MM/YYYY'" v-bind:class="{'is-danger': errors.has('end_date') }"  data-vv-name="end_date" data-vv-as="Data de Encerramento")
+        cleave.input(v-bind:options="{date: true, datePattern: ['d', 'm', 'Y'] }" placeholder="DD/MM/AAAA" v-model="event.end_date" v-validate="`date_format:DD/MM/YYYY|date_between:${this.event.start_date},${lastDay}`" v-bind:class="{'is-danger': errors.has('end_date') }"  data-vv-name="end_date" data-vv-as="Data de Encerramento")
         span.help.is-danger(v-show="errors.has('end_date')") {{ errors.first('end_date') }}
       label.label Seções Participantes*
       p.control
@@ -51,7 +51,7 @@
       label.label Tipo*
       p.control
         multiselect(
-          v-model="event.host",
+          v-model="event.hosts",
           :options="hosts",
           :multiple="true",
           :taggable="true",
@@ -62,11 +62,11 @@
           deselect-label="Aperte enter para remover"
           tag-placeholder="Pressione enter pra escolher",
           v-validate="'required'",
-          v-bind:class="{'is-danger': errors.has('host') }",
-          data-vv-name="host",
+          v-bind:class="{'is-danger': errors.has('hosts') }",
+          data-vv-name="hosts",
           data-vv-as="Tipo"
         )
-        span.help.is-danger(v-show="errors.has('host')") {{ errors.first('host') }}
+        span.help.is-danger(v-show="errors.has('hosts')") {{ errors.first('hosts') }}
       hr
       h5.title.is-5 Arquivos
       div.box(v-for="(file, index) in event.files")
@@ -81,7 +81,7 @@
           span.help.is-danger(v-show="errors.has('title#' + index)") {{ errors.first('title#' + index) }}
         label.label URL Arquivo
         p.control
-          input.input(type="text" placeholder="Link para o Arquivo" v-model="file.path" v-validate="'required|min:4|max:100'" v-bind:class="{'is-danger': errors.has('file#' + index) }" v-bind:name="'file#' + index" data-vv-as="URL")
+          input.input(type="text" placeholder="Link para o Arquivo" v-model="file.path" v-validate="'required|min:4|max:100|url'" v-bind:class="{'is-danger': errors.has('file#' + index) }" v-bind:name="'file#' + index" data-vv-as="URL")
           span.help.is-danger(v-show="errors.has('file#' + index)") {{ errors.first('file#' + index) }}
         br
       p.control.submit-button
@@ -125,7 +125,6 @@
       propsData
     })
   }
-
   const toolbarOptions = [
     ['bold', 'italic', 'underline', 'strike'],
     [{'list': 'ordered'}, {'list': 'bullet'}],
@@ -155,8 +154,9 @@
       if (to.name === 'Editar Evento') {
         eventsService.get(to.params.id).then((response) => {
           next(vm => {
+            console.log(response.body)
             vm.text = 'Editar'
-            vm.news = response.body
+            vm.event = response.body
           })
         }, (response) => {
           next(false)
@@ -169,6 +169,8 @@
     },
     data () {
       return {
+        today: Vue.moment(Date.now()).format('DD/MM/YYYY'),
+        lastDay: Vue.moment(Date.now()).add(4, 'y').format('DD/MM/YYYY'),
         sections: eventsService.getSections(),
         hosts: eventsService.getHosts(),
         text: '',
@@ -178,11 +180,11 @@
           slug: '',
           description: '',
           place: '',
-          host: '',
+          hosts: [],
           image: '',
           start_date: '',
           end_date: '',
-          section: [],
+          sections: [],
           files: [{path: '', title: ''}]
         },
         customErrors: {
@@ -202,8 +204,25 @@
           }
         })
       },
+      createFormData () {
+        const formData = new window.FormData()
+        formData.append('title', this.event.title)
+        formData.append('slug', this.event.slug)
+        formData.append('description', this.event.description)
+        formData.append('place', this.event.place)
+        formData.append('start_date', this.event.start_date)
+        formData.append('end_date', this.event.end_date)
+        formData.append('hosts', JSON.stringify(this.event.hosts))
+        formData.append('section', JSON.stringify(this.event.section))
+        formData.append('files', JSON.stringify(this.event.files))
+        if (this.event.image.name) formData.append('image', this.event.image, this.event.image.name)
+
+        return formData
+      },
       editEvent () {
-        eventsService.update(this.event._id, this.event)
+        const formData = this.createFormData()
+
+        eventsService.update(this.event._id, formData)
         .then(response => {
           openNotification({
             message: 'Evento atualizada com sucesso!',
@@ -227,7 +246,9 @@
         })
       },
       addEvent () {
-        eventsService.create(this.event)
+        const formData = this.createFormData()
+
+        eventsService.create(formData)
         .then(response => {
           openNotification({
             message: 'Evento criado com sucesso!',

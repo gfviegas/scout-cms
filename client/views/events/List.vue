@@ -17,6 +17,7 @@
             th Slug
             th Título
             th Organização
+            th Seção
             th Último Editor
             th Atualizado
             th Criado
@@ -29,7 +30,9 @@
             td
               span(v-if="event.title") {{event.title}}
             td
-              span(v-if="event.host") {{event.host}}
+              span(v-if="event.hosts") {{event.hosts.join(', ')}}
+            td
+              span(v-if="event.section") {{event.section.join(', ')}}
             td
               span(v-if="event.last_updated_by") {{event.last_updated_by.name}}
             td
@@ -37,7 +40,7 @@
             td
               span(v-if="event.created_at") {{event.created_at | moment("L LT")}}
             td.is-icon
-              router-link(:to="{name: 'Editar Notícia', params: {id: event._id}}")
+              router-link(:to="{name: 'Editar Evento', params: {id: event._id}}")
                 i.fa.fa-pencil
             td.is-icon
               a(@click="openConfirmDeleteModal(event, index)")
@@ -140,6 +143,7 @@
       const filter = this.$route.query.filter || ''
 
       eventsService.query({page: page, limit: ITEMS_PER_PAGE, filter: filter}).then((response) => {
+        console.log(response.body)
         vm.events = response.body.events
         vm.currentPage = response.body.meta.currentPage
         vm.limit = response.body.meta.limit
