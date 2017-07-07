@@ -154,9 +154,10 @@
       if (to.name === 'Editar Evento') {
         eventsService.get(to.params.id).then((response) => {
           next(vm => {
-            console.log(response.body)
             vm.text = 'Editar'
             vm.event = response.body
+            vm.event.start_date = Vue.moment(response.body.start_date).format('DD/MM/YYYY')
+            if (vm.event.end_date.length) vm.event.end_date = Vue.moment(response.body.end_date).format('DD/MM/YYYY')
           })
         }, (response) => {
           next(false)
@@ -211,7 +212,7 @@
         formData.append('description', this.event.description)
         formData.append('place', this.event.place)
         formData.append('start_date', this.event.start_date)
-        formData.append('end_date', this.event.end_date)
+        if (this.event.end_date.lenth) formData.append('end_date', this.event.end_date)
         formData.append('hosts', JSON.stringify(this.event.hosts))
         formData.append('section', JSON.stringify(this.event.section))
         formData.append('files', JSON.stringify(this.event.files))
@@ -307,14 +308,12 @@
       rescrape () {
         eventsService.rescrape(this.event._id)
         .then(response => {
-          console.log(response)
           openNotification({
             message: 'Cache do evento atualizado com sucesso!',
             type: 'success',
             duration: 3000
           })
         }, response => {
-          console.log(response)
           openNotification({
             message: 'Erro ao atualizar o cache do evento!',
             type: 'danger',

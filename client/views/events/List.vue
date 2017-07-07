@@ -18,6 +18,7 @@
             th Título
             th Organização
             th Seção
+            th Data Inicio
             th Último Editor
             th Atualizado
             th Criado
@@ -33,6 +34,8 @@
               span(v-if="event.hosts") {{event.hosts.join(', ')}}
             td
               span(v-if="event.section") {{event.section.join(', ')}}
+            td
+              span(v-if="event.start_date") {{event.start_date | moment('DD/MM/YYYY')}}
             td
               span(v-if="event.last_updated_by") {{event.last_updated_by.name}}
             td
