@@ -212,7 +212,7 @@
         formData.append('description', this.event.description)
         formData.append('place', this.event.place)
         formData.append('start_date', this.event.start_date)
-        if (this.event.end_date.lenth) formData.append('end_date', this.event.end_date)
+        if (this.event.end_date.length) formData.append('end_date', this.event.end_date)
         formData.append('hosts', JSON.stringify(this.event.hosts))
         formData.append('section', JSON.stringify(this.event.section))
         formData.append('files', JSON.stringify(this.event.files))
