@@ -2,13 +2,14 @@ import * as types from '../../mutation-types'
 // import lazyLoading from './lazyLoading'
 import users from './users'
 import news from './news'
-// import events from './events'
-// import rewards from './rewards'
-// import sower from './sower'
-// import level from './level'
-// import book from './book'
-// import badges from './badges'
+import events from './events'
+import rewards from './rewards'
+import sower from './sower'
+import level from './level'
+import book from './book'
+import badges from './badges'
 import documents from './documents'
+
 // show: meta.label -> name
 // name: component name
 // meta.label: display label
@@ -16,13 +17,13 @@ import documents from './documents'
 const state = {
   items: [
     news,
-  //  events,
+    events,
     documents,
-  //  rewards,
-  //  badges,
-  //  sower,
-  //  level,
-  //  book,
+    rewards,
+    badges,
+    sower,
+    level,
+    book,
     users
   ]
 }

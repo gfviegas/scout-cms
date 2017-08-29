@@ -7,7 +7,7 @@ COPY package.json /tmp/
 RUN yarn install --pure-lockfile
 
 WORKDIR /var/www/scout-cms
-RUN mv /tmp/node_modules /var/www/scout-cms/
+RUN cp -a /tmp/node_modules /var/www/scout-cms/
 
 EXPOSE 8888
 CMD ["yarn", "run", "dev"]
