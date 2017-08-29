@@ -18,7 +18,7 @@ const children = [
 export default {
   path: '/rewards',
   meta: {
-    label: 'Recompensas',
+    label: '',
     icon: 'fa-certificate',
     link: children[0]
   },
