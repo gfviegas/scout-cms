@@ -9,6 +9,7 @@ import level from './level'
 import book from './book'
 import badges from './badges'
 import documents from './documents'
+import setup from './setup'
 
 // show: meta.label -> name
 // name: component name
@@ -24,7 +25,8 @@ const state = {
     sower,
     level,
     book,
-    users
+    users,
+    setup
   ]
 }
 
