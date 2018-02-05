@@ -14,7 +14,7 @@
       table.table.is-narrow
         thead
           tr
-            //- th ID
+            th ID
             th Slug
             th Título
             th Último Editor
@@ -25,7 +25,8 @@
             th
         tbody
           tr(v-for="(newContent, index) in news")
-            //- td {{newContent._id}}
+            td
+              span(v-if="newContent._id") {{newContent._id}}
             td
               span(v-if="newContent.slug") {{newContent.slug}}
             td
