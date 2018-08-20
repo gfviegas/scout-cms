@@ -86,11 +86,11 @@
     },
     data () {
       return {
-        text: '',
+        text: null,
         news: {
-          title: '',
-          slug: '',
-          content: ''
+          title: null,
+          slug: null,
+          content: null
         },
         customErrors: {
           slug: []

@@ -174,19 +174,19 @@
         lastDay: Vue.moment(Date.now()).add(4, 'y').format('DD/MM/YYYY'),
         sections: eventsService.getSections(),
         hosts: eventsService.getHosts(),
-        text: '',
+        text: null,
         imagePath: `${process.env.IMG_URL}/events/no_image.jpg`,
         event: {
-          title: '',
-          slug: '',
-          description: '',
-          place: '',
+          title: null,
+          slug: null,
+          description: null,
+          place: null,
           hosts: [],
-          image: '',
-          start_date: '',
-          end_date: '',
+          image: null,
+          start_date: null,
+          end_date: null,
           sections: [],
-          files: [{path: '', title: ''}]
+          files: [{path: null, title: null}]
         },
         customErrors: {
           slug: []

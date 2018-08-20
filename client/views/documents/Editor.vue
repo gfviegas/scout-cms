@@ -75,10 +75,10 @@
     data () {
       return {
         document: {
-          type: '',
-          title: '',
-          description: '',
-          file: ''
+          type: null,
+          title: null,
+          description: null,
+          file: null
         },
         validations: {},
         type: 'create',
