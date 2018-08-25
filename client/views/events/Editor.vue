@@ -292,7 +292,7 @@
         this.event.files.splice(index, 1)
       },
       getEventImage () {
-        if (this.event.image.length) {
+        if (this.event.image && this.event.image.length) {
           return `${process.env.IMG_URL}${this.event.image}`
         } else {
           return this.imagePath
