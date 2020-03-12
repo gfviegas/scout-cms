@@ -157,7 +157,7 @@
             vm.text = 'Editar'
             vm.event = response.body
             vm.event.start_date = Vue.moment(response.body.start_date).format('DD/MM/YYYY')
-            if (vm.event.end_date.length) vm.event.end_date = Vue.moment(response.body.end_date).format('DD/MM/YYYY')
+            if (vm.event.end_date && vm.event.end_date.length) vm.event.end_date = Vue.moment(response.body.end_date).format('DD/MM/YYYY')
           })
         }, (response) => {
           next(false)
