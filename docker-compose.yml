@@ -1,0 +1,13 @@
+version: '2'
+
+services:
+  admin:
+    build: .
+    working_dir: /var/www/app
+    container_name: eric-admin
+    command: bash -c 'npm i && npm run dev'
+    volumes:
+      - ./:/var/www/app:cached
+      - ./node_modules:/var/www/app/node_modules:cached
+    ports:
+      - 81:8888
